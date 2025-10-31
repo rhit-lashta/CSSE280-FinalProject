@@ -1,47 +1,50 @@
-import { useState } from 'react'
 import './App.css'
+import React, { useEffect } from "react";
+import { displayTopLevel } from "./loginScript"; 
 
 function App() {
-  // TODO: With your instructor
 
   //<> is a React Fragment that doesn't include extra DOM elements
+
+  // Use Effects once at the start
+  useEffect(() => {
+    displayTopLevel()
+  }, []);
+  
+
   return (
     <> 
-      <h1>Shopping List</h1>
-      <div>
-        <form>
-          <p>
-            <input type="text" id="text1" required pattern="\w[0-9a-zA-Z\- ]*"
-              title="Must have at least one non-whitespace character and no special characters."
-              ></input>
-          </p>
-          <p>
-            <input id="button1" type="button" value="Add Item To List" 
-              // TODO: With your instructor
-            ></input>
-          </p>
-        </form>
-      </div>
-      <div className="list-container">
-        <div className="list">
-          <section name="to_get">
-            <h2>To Get:</h2>
-            <ul id="list1">{
-              // TODO: With your instructor
-            }
-            </ul>
-          </section>
-        </div>
-        <div className="list">
-          <section name="got">
-            <h2>Got:</h2>
-            <ul id="list2">{
-              // TODO: With your instructor
-            }
-            </ul>
-          </section>
-        </div>
-      </div>
+      <main>
+        
+        <h1>Shopping List</h1>
+          <section>
+            <h2>Please Log In</h2>
+            <div id="login">
+                <h3>Login</h3>
+                <form action="/create_account" method="POST" enctype="application/x-www-form-urlencoded">
+                    <p>
+                        <label for="username_text">Username:</label>
+                        <input id="username_text" type="text" name="username"></input>
+                    </p>
+                    <p>
+                        <label for="password_text">Password:</label>
+                        <input id="password_text" type="password" name="password"></input>
+                    </p>
+                    <input id="create_button" type="submit" value="Create Account" class="hide"></input>
+                    <button id="login_button" type="button" onclick="login()">Login</button>
+                </form>
+            </div>
+            <div>
+                <p>
+                    <a href="#" id="switch" onclick="swapBetweenLoginAndCreate()">Switch to Create Account</a>
+                </p>
+            </div>
+            <div>
+                <p> Database Top Level: </p>
+                <div id="topLevel"></div>
+            </div>
+        </section>
+      </main>
     </>
   )
 }

@@ -1,0 +1,81 @@
+export async function login() {
+    try {
+        let username = document.getElementById("username_text").value;
+        let password = document.getElementById("password_text").value;
+        
+
+        let response = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        })
+        let responseData = await response.json();
+        let accessToken = responseData["access_token"];
+        if (!accessToken) {
+            alert("Login failed")
+            return;
+        }
+        localStorage.setItem("access_token", accessToken);
+        window.location.href = "/shopping.html";
+
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+}
+
+// UI STUFF
+export function swapBetweenLoginAndCreate() {
+    let loginButton = document.getElementById("login_button");
+    let createButton = document.getElementById("create_button");
+    let switchButton = document.getElementById("switch");
+    if (createButton.classList.contains("hide")) {
+        createButton.classList.remove("hide");
+        loginButton.classList.add("hide");
+        switchButton.innerText = "Switch to Login";
+    }
+    else {
+        loginButton.classList.remove("hide");
+        createButton.classList.add("hide");
+        switchButton.innerText = "Switch to Create Account";
+    }
+    //This prevents the browser from actually redirecting to #, which we don't want
+    return false;
+}
+
+window.addEventListener("load", (event) => {
+    console.log("event occurred: " + event);
+    console.log("page is fully loaded");
+    displayTopLevel();
+});
+
+export async function displayTopLevel() {
+    let options = {
+        method: 'GET'
+    }
+    try {
+        let response = await fetch("/top", options);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        let responseData = await response.json();
+
+        let topLevel = "";
+        for (let i = 0; i < responseData.length; i++) {
+            topLevel += responseData[i] + " ";
+        }
+
+        let topData = document.querySelector("#topLevel")     
+        topData.innerHTML = topLevel;
+
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+}
+

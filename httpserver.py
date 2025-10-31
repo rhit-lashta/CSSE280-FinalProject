@@ -21,78 +21,18 @@ app = flask.Flask(__name__,
             static_folder='dist',)
 
 app.config['IMAGE_FOLDER'] = IMAGE_FOLDER
-#app.config["JWT_SECRET_KEY"]
+app.config['JWT_SECRET_KEY'] = "mysecretkey"
+jwt = JWTManager(app)
+
+@app.get("/top")
+def get_list():
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_top_list()))
 
 @app.get("/shutdown")
 def shutdown():
     os._exit(0)
-
-
-@app.get("/list")
-def get_list():
-    return flask.Response(status="200 OK",
-                          headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_shopping_list()))
-
-@app.post("/list/<item>")
-def post_list_item(item):
-    dataservice.add_item_to_list(item)
-    return flask.Response(status="201 Created",
-                          headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_shopping_list()))
-
-
-@app.post("/list/image")
-def add_image_to_item():
-    item = flask.request.form['itemWithImageName']
-    filepath = process_image_file(flask.request)
-    if filepath is None:
-        dataservice.add_item_to_list(item)
-    else:
-        # need to replace public/ because the final serving path is relative
-        # to the html file, not the server. 
-        dataservice.add_item_with_image(item, filepath.replace("public/",""))
-    return flask.redirect("/shopping.html")
-
-
-@app.patch("/list/<item>")
-def patch_list_item(item):
-    dataservice.move_item_between_lists(item)
-    return flask.Response(status="200 OK",
-                          headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_shopping_list()))
-
-
-@app.delete("/list/<item>")
-def delete_list_item(item):
-    dataservice.remove_item(item)
-    return flask.Response(status="200 OK",
-                          headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_shopping_list()))
-
-
-
-# File Processing Code Below
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def process_image_file(request):
-    # check if the post request has the file part
-    if 'imageData' not in request.files:
-        return None
-    file = request.files['imageData']
-    # If the user does not select a file, the browser submits an
-    # empty file without a filename.
-    if file.filename == '':
-        return None
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['IMAGE_FOLDER'], filename)
-        print(os.getcwd())
-        file.save(filepath)
-        return filepath
 
 
 if __name__ == "__main__":
