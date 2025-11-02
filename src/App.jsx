@@ -1,6 +1,6 @@
 import './App.css'
 import React, { useEffect } from "react";
-import { displayTopLevel } from "./loginScript"; 
+import { displayTopLevel, login, displayTypes, displayTags } from "./loginScript"; 
 
 function App() {
 
@@ -9,6 +9,8 @@ function App() {
   // Use Effects once at the start
   useEffect(() => {
     displayTopLevel()
+    displayTypes()
+    displayTags()
   }, []);
   
 
@@ -31,7 +33,7 @@ function App() {
                         <input id="password_text" type="password" name="password"></input>
                     </p>
                     <input id="create_button" type="submit" value="Create Account" class="hide"></input>
-                    <button id="login_button" type="button" onclick="login()">Login</button>
+                    <button id="login_button" type="button" onClick={login}>Login</button>
                 </form>
             </div>
             <div>
@@ -42,6 +44,16 @@ function App() {
             <div>
                 <p> Database Top Level: </p>
                 <div id="topLevel"></div>
+            </div>
+
+            <div>
+                <p> Types: </p>
+                <div id="types"></div>
+            </div>
+
+            <div>
+                <p> Tags: </p>
+                <div id="tags"></div>
             </div>
         </section>
       </main>

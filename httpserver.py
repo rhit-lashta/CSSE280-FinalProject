@@ -25,10 +25,43 @@ app.config['JWT_SECRET_KEY'] = "mysecretkey"
 jwt = JWTManager(app)
 
 @app.get("/top")
-def get_list():
+def get_top():
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_top_list()))
+
+@app.get("/types")
+def get_types():
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_types_list()))
+
+@app.get("/tags")
+def get_tags():
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_tags_list()))
+
+
+
+@app.post("/create_account")
+def create_account():
+    username = request.form["username"]
+    password = request.form["password"]
+    if not dataservice.add_user(username, password):
+        return flask.redirect("/index.html")
+        '''return flask.Response(400)'''
+    return flask.redirect("/index.html")
+
+
+@app.post("/login")
+def login():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    if not dataservice.authenticate_user(username, password):
+        return flask.Response(status=401)
+    access_token = create_access_token(identity = username)
+    return jsonify(access_token = access_token)
 
 @app.get("/shutdown")
 def shutdown():

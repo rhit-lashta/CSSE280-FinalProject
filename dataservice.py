@@ -91,12 +91,12 @@ def get_db():
 def add_placeholder_values():
     db = get_db()
 
-    types = get_type_list(db)
+    types = db.get(data_key)[type_key]
     types["lofts"] = {"loft1":{sold_key:"100", data_key:"10/29/2025"},
                       "loft2":{sold_key:"150", data_key:"10/30/2025"}}
     types["lights"] = {"light1":{sold_key:"30", data_key:"10/30/2025"}}
 
-    tags = get_tag_list(db)
+    tags = db.get(data_key)[tag_key]
     tags["wooden"] = "1"
     tags["metal"] = "2"
 
@@ -113,15 +113,6 @@ def add_placeholder_values():
 
 
 
-def get_type_list(db):
-    return db.get(data_key)[type_key]
-    
-def get_tag_list(db):
-    return db.get(data_key)[tag_key]
-
-    
-
-
 def get_user_data(db, username):
     return db.get(users_key)[username]
 
@@ -135,19 +126,6 @@ def add_user(username, password):
     users[username] = new_user
     db.save()
     return True
-
-'''
-def add_user(username, password):
-    db = get_db(username)
-    users = db.get("users")
-    if username in users.keys():
-        return False
-    new_user = {"password": password}
-    users[username] = new_user
-    db.set("users", users)
-    db.save()
-    return True
-'''
 
 def authenticate_user(username, password):
     db = get_db()
@@ -167,6 +145,33 @@ def get_top_list():
         topLevel.append(x)
 
     return topLevel
+
+def get_types_list():
+    db = get_db()
+    all_types = db.get(data_key)[type_key]
+    types = []
+    for typeName in all_types:
+        sales = all_types[typeName]
+        typeData = [typeName, sales]
+        types.append(typeData)
+
+    types = sorted(types, key=lambda types: -len(types[1]))
+    return types
+
+def get_tags_list():
+    db = get_db()
+    all_tags = db.get(data_key)[tag_key]
+    tags = []
+    for tagName in all_tags:
+        offers = all_tags[tagName]
+        tagData = [tagName, offers]
+        tags.append(tagData)
+
+    tags = sorted(tags, key=lambda tags: -(int(tags[1])))
+    return tags
+    
+
+
 
 '''
 def get_shopping_list():

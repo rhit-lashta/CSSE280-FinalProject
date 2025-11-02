@@ -1,9 +1,13 @@
+
+
+
+
+
 export async function login() {
     try {
         let username = document.getElementById("username_text").value;
         let password = document.getElementById("password_text").value;
         
-
         let response = await fetch("/login", {
             method: "POST",
             headers: {
@@ -21,7 +25,7 @@ export async function login() {
             return;
         }
         localStorage.setItem("access_token", accessToken);
-        window.location.href = "/shopping.html";
+        window.location.href = "/mainPage.html";
 
     }
     catch (ex) {
@@ -51,8 +55,10 @@ export function swapBetweenLoginAndCreate() {
 window.addEventListener("load", (event) => {
     console.log("event occurred: " + event);
     console.log("page is fully loaded");
-    displayTopLevel();
+    //displayTopLevel();
 });
+
+
 
 export async function displayTopLevel() {
     let options = {
@@ -72,6 +78,75 @@ export async function displayTopLevel() {
 
         let topData = document.querySelector("#topLevel")     
         topData.innerHTML = topLevel;
+
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+}
+
+export async function displayTypes() {
+    let options = {
+        method: 'GET'
+    }
+    try {
+        let response = await fetch("/types", options);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        let responseData = await response.json();
+
+
+
+        let types = "";
+        for (let i = 0; i < responseData.length; i++) {
+            response = responseData[i];
+            let items = "{";
+            for (let itemName in response[1]) {
+                //let itemProperties = response[1].itemName
+                //let itemTraits = "{sold:" + itemProperties.sold + ", date:" + itemProperties.date + "}"
+                let itemTraits = "test"
+
+                items += itemName + ": " + itemTraits + ", ";
+            }
+            items += "}";
+
+
+            types += "[" + response[0] + ", " + items + "] ";
+        }
+
+        let topData = document.querySelector("#types")     
+        topData.innerHTML = types;
+
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+}
+
+export async function displayTags() {
+    let options = {
+        method: 'GET'
+    }
+    try {
+        let response = await fetch("/tags", options);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        let responseData = await response.json();
+
+        // This has the tags data
+        let tags = responseData;
+        // This is an example
+        let tagsDisplay = "["
+        for (let i = 0; i < responseData.length; i++) {
+            tags[i] =  responseData[i]
+            tagsDisplay += "[" + responseData[i][0] + ", " + responseData[i][1] + "],"
+        }
+        tagsDisplay += "]"
+
+        let topData = document.querySelector("#tags")     
+        topData.innerHTML = tagsDisplay;
 
     }
     catch (ex) {
