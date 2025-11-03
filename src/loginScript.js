@@ -154,3 +154,41 @@ export async function displayTags() {
     }
 }
 
+
+export async function displayItems() {
+
+    //let type = document.querySelector("#type") 
+    //let orderValue = document.querySelector("#orderValue") 
+    //let order = document.querySelector("#order") 
+    //let tags = document.querySelector("#tags") 
+    //let tagRequirements = document.querySelector("#tagRequirements") 
+
+    let data = {
+        "type": "",
+        "orderValue": "",
+        "order": "",
+        "tags": [],
+        "tagRequirements": ""
+    }
+    let options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    };
+    data = options
+/*
+    try {
+        let response = await fetch(imageURL + "/" + imageName, options)
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        let responseData = await response.json();
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+        */
+}
+

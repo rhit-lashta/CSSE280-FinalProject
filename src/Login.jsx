@@ -1,8 +1,8 @@
-import './App.css'
+import './Login.css'
 import React, { useEffect } from "react";
 import { displayTopLevel, login, displayTypes, displayTags } from "./loginScript"; 
 
-function App() {
+function Login() {
 
   //<> is a React Fragment that doesn't include extra DOM elements
 
@@ -61,4 +61,4 @@ function App() {
   )
 }
 
-export default App
+export default Login
