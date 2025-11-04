@@ -1,6 +1,6 @@
 import './Login.css'
 import React, { useEffect } from "react";
-import { displayTopLevel, login, displayTypes, displayTags } from "./loginScript"; 
+import { displayTopLevel, login, displayTypes, displayTags, displayItems } from "./loginScript"; 
 
 function Login() {
 
@@ -11,6 +11,7 @@ function Login() {
     displayTopLevel()
     displayTypes()
     displayTags()
+    displayItems()
   }, []);
   
 
@@ -54,6 +55,11 @@ function Login() {
             <div>
                 <p> Tags: </p>
                 <div id="tags"></div>
+            </div>
+
+            <div>
+                <p> Items: </p>
+                <div id="items"></div>
             </div>
         </section>
       </main>

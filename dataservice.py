@@ -54,7 +54,7 @@ Pickle DB = {
             “profileImage”:”images/test.jpg”,
  	        “items”:{
 		        “Item1”: {
-		        	“type”:”lofts”,
+		        	“type”:”loft”,
 			        “price”:”70”,
 			        “tags”:[“wooden”, “metal”]
 			        “image”:”images/test.jpg”
@@ -169,6 +169,42 @@ def get_tags_list():
 
     tags = sorted(tags, key=lambda tags: -(int(tags[1])))
     return tags
+
+def get_item_list(type, orderValue, order, tags, tagRequirements):
+    db = get_db()
+    users = db.get(users_key)
+    items = []
+
+    for userName in users:
+        userItems = users[userName][item_key]
+        for itemName in userItems:
+            itemTraits = userItems[itemName]
+            if ((type == "" or type == itemTraits[itemType_key]) and (check_item_tags(itemTraits[tag_key], tags, tagRequirements))):
+                newItem = [itemName, itemTraits]
+                items.append(newItem)
+
+    if (orderValue == "price"):
+        items = sorted(items, key=lambda items: order * (int(items[1][price_key])))
+
+    items = items
+  
+    return items
+
+
+def check_item_tags(itemTags, tags, tagRequirements):
+
+    if tagRequirements <= 0:
+        return True
+
+    correctTags = 0
+    for tag in itemTags:
+        if tag in tags:
+            correctTags += 1
+            if (correctTags >= tagRequirements):
+                break
+
+    return correctTags >= tagRequirements
+
     
 
 

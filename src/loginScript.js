@@ -171,24 +171,39 @@ export async function displayItems() {
         "tagRequirements": ""
     }
     let options = {
-        method: 'GET',
+        method: "POST",
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     };
-    data = options
-/*
+
+
     try {
-        let response = await fetch(imageURL + "/" + imageName, options)
+        let response = await fetch("/items", options)
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
         let responseData = await response.json();
+
+        let itemDisplay = "["
+        for (let i = 0; i < responseData.length; i++) {
+            let itemData = responseData[i][1]
+            let itemValues = "{"
+            for (let key in responseData[i][1])
+                itemValues += key + ": " + itemData[key] + ", "
+            itemValues += "}"
+
+            itemDisplay += "[" + responseData[i][0] + ", " + itemValues + "],"
+        }
+        itemDisplay += "]"
+
+        let itemHtml = document.querySelector("#items")     
+        itemHtml.innerHTML = itemDisplay;
     }
     catch (ex) {
         console.error(ex);
     }
-        */
+
 }
 

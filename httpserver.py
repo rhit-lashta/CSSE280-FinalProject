@@ -42,6 +42,20 @@ def get_tags():
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_tags_list()))
 
+@app.post("/items")
+def get_items():
+
+    data = request.get_json()
+    type = data.get("type")
+    orderValue = data.get("orderValue")
+    order = int(data.get("order"))
+    tags = data.get("tags")
+    tagRequirements = int(data.get("tagRequirements"))
+
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_item_list(data, orderValue, order, tags, tagRequirements)))
+
 
 
 @app.post("/create_account")
