@@ -1,3 +1,30 @@
+let tagArray = []
+let typeArray = []
+let itemsArray = []
+
+
+function logout() {
+    localStorage.removeItem("access_token");
+    window.location.href = "/index.html";
+}
+
+function handle401(response){
+    if(response.status == 401){
+        logout();
+        return true;
+    }
+    return false;
+}
+
+function addAuthHeader(options){
+    if(localStorage["access_token"]){
+        if(!options["headers"]){
+            options["headers"] = {};
+        }
+        options["headers"]["Authorization"] = "Bearer " + localStorage.getItem("access_token");
+    }
+}
+
 export async function login() {
     try {
         let username = document.getElementById("username_text").value;
@@ -16,11 +43,11 @@ export async function login() {
         let responseData = await response.json();
         let accessToken = responseData["access_token"];
         if (!accessToken) {
-            alert("Login failed")
+            alert("Login failed");
             return;
         }
         localStorage.setItem("access_token", accessToken);
-        window.location.href = "/index.html#/listings";
+        window.location.href = "index.html#/listings";
 
     }
     catch (ex) {
@@ -28,37 +55,13 @@ export async function login() {
     }
 }
 
-// UI STUFF
-export function swapBetweenLoginAndCreate() {
-    let loginButton = document.getElementById("login_button");
-    let createButton = document.getElementById("create_button");
-    let switchButton = document.getElementById("switch");
-    if (createButton.classList.contains("hide")) {
-        createButton.classList.remove("hide");
-        loginButton.classList.add("hide");
-        switchButton.innerText = "Switch to Login";
-    }
-    else {
-        loginButton.classList.remove("hide");
-        createButton.classList.add("hide");
-        switchButton.innerText = "Switch to Create Account";
-    }
-    //This prevents the browser from actually redirecting to #, which we don't want
-    return false;
-}
-
-window.addEventListener("load", (event) => {
-    console.log("event occurred: " + event);
-    console.log("page is fully loaded");
-    //displayTopLevel();
-});
-
 
 
 export async function displayTopLevel() {
     let options = {
         method: 'GET'
     }
+    addAuthHeader(options)
     try {
         let response = await fetch("/top", options);
         if (!response.ok) {
@@ -84,18 +87,18 @@ export async function displayTypes() {
     let options = {
         method: 'GET'
     }
+    addAuthHeader(options)
     try {
         let response = await fetch("/types", options);
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
-        let responseData = await response.json();
-
+        typeArray = await response.json();
 
 
         let types = "";
-        for (let i = 0; i < responseData.length; i++) {
-            response = responseData[i];
+        for (let i = 0; i < typeArray.length; i++) {
+            response = typeArray[i];
             let items = "{";
             for (let itemName in response[1]) {
                 //let itemProperties = response[1].itemName
@@ -123,20 +126,18 @@ export async function displayTags() {
     let options = {
         method: 'GET'
     }
+    addAuthHeader(options)
     try {
         let response = await fetch("/tags", options);
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
-        let responseData = await response.json();
+        tagArray = await response.json();
 
-        // This has the tags data
-        let tags = responseData;
         // This is an example
         let tagsDisplay = "["
-        for (let i = 0; i < responseData.length; i++) {
-            tags[i] =  responseData[i]
-            tagsDisplay += "[" + responseData[i][0] + ", " + responseData[i][1] + "],"
+        for (let i = 0; i < tagArray.length; i++) {
+            tagsDisplay += "[" + tagArray[i][0] + ", " + tagArray[i][1] + "],"
         }
         tagsDisplay += "]"
 
@@ -172,6 +173,7 @@ export async function displayItems() {
         },
         body: JSON.stringify(data)
     };
+    addAuthHeader(options)
 
 
     try {
@@ -179,17 +181,17 @@ export async function displayItems() {
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
-        let responseData = await response.json();
+        itemsArray = await response.json();
 
         let itemDisplay = "["
-        for (let i = 0; i < responseData.length; i++) {
-            let itemData = responseData[i][1]
+        for (let i = 0; i < itemsArray.length; i++) {
+            let itemData = itemsArray[i][1]
             let itemValues = "{"
-            for (let key in responseData[i][1])
+            for (let key in itemsArray[i][1])
                 itemValues += key + ": " + itemData[key] + ", "
             itemValues += "}"
 
-            itemDisplay += "[" + responseData[i][0] + ", " + itemValues + "],"
+            itemDisplay += "[" + itemsArray[i][0] + ", " + itemValues + "],"
         }
         itemDisplay += "]"
 

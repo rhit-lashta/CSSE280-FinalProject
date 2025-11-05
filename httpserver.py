@@ -24,39 +24,6 @@ app.config['IMAGE_FOLDER'] = IMAGE_FOLDER
 app.config['JWT_SECRET_KEY'] = "mysecretkey"
 jwt = JWTManager(app)
 
-@app.get("/top")
-def get_top():
-    return flask.Response(status="200 OK",
-                          headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_top_list()))
-
-@app.get("/types")
-def get_types():
-    return flask.Response(status="200 OK",
-                          headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_types_list()))
-
-@app.get("/tags")
-def get_tags():
-    return flask.Response(status="200 OK",
-                          headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_tags_list()))
-
-@app.post("/items")
-def get_items():
-
-    data = request.get_json()
-    type = data.get("type")
-    orderValue = data.get("orderValue")
-    order = int(data.get("order"))
-    tags = data.get("tags")
-    tagRequirements = int(data.get("tagRequirements"))
-
-    return flask.Response(status="200 OK",
-                          headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_item_list(type, orderValue, order, tags, tagRequirements)))
-
-
 
 @app.post("/create_account")
 def create_account():
@@ -76,8 +43,58 @@ def login():
     access_token = create_access_token(identity = username)
     return jsonify(access_token = access_token)
 
+@app.get("/top")
+@jwt_required()
+def get_top():
+    if (dataservice.verify_user_exists(get_jwt_identity()) == False):
+        return flask.Response(status="401")
+    print(get_jwt_identity())
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_top_list()))
+
+@app.get("/types")
+@jwt_required()
+def get_types():
+    if (dataservice.verify_user_exists(get_jwt_identity()) == False):
+        return flask.Response(status="401")
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_types_list()))
+
+@app.get("/tags")
+@jwt_required()
+def get_tags():
+    if (dataservice.verify_user_exists(get_jwt_identity()) == False):
+        return flask.Response(status="401")
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_tags_list()))
+
+@app.post("/items")
+@jwt_required()
+def get_items():
+    if (dataservice.verify_user_exists(get_jwt_identity()) == False):
+        return flask.Response(status="401")
+
+    data = request.get_json()
+    type = data.get("type")
+    orderValue = data.get("orderValue")
+    order = int(data.get("order"))
+    tags = data.get("tags")
+    tagRequirements = int(data.get("tagRequirements"))
+
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_item_list(type, orderValue, order, tags, tagRequirements)))
+
+
+
 @app.get("/shutdown")
+@jwt_required()
 def shutdown():
+    if (dataservice.verify_user_exists(get_jwt_identity()) == False):
+        return flask.Response(status="401")
     os._exit(0)
 
 
