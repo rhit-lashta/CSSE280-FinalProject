@@ -2,7 +2,7 @@ import './Login.css'
 import React, { useEffect } from "react";
 //import { displayTopLevel, displayTypes, displayTags } from "./loginScript"; 
 
-function Listings() {
+function AddListing() {
 
   //<> is a React Fragment that doesn't include extra DOM elements
 
@@ -16,11 +16,11 @@ function Listings() {
     <> 
       <main>
 
-      <h1>Listings</h1>
-
+        <h1>Add Listing</h1>
+      
       </main>
     </>
   )
 }
 
-export default Listings
+export default AddListing

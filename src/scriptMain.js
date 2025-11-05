@@ -1,8 +1,3 @@
-
-
-
-
-
 export async function login() {
     try {
         let username = document.getElementById("username_text").value;
@@ -25,7 +20,7 @@ export async function login() {
             return;
         }
         localStorage.setItem("access_token", accessToken);
-        window.location.href = "/mainPage.html";
+        window.location.href = "/index.html#/listings";
 
     }
     catch (ex) {
@@ -166,9 +161,9 @@ export async function displayItems() {
     let data = {
         "type": "",
         "orderValue": "",
-        "order": "",
+        "order": "0",
         "tags": [],
-        "tagRequirements": ""
+        "tagRequirements": "0"
     }
     let options = {
         method: "POST",

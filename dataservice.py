@@ -122,7 +122,12 @@ def add_user(username, password):
     users = db.get(users_key)
     if username in users:
         return False
-    new_user = {password_key: password}
+    new_user = {password_key:password,
+                email_key:"", 
+                phone_key:"", 
+                description_key:"", 
+                profile_key: "",
+                item_key:{}}
     users[username] = new_user
     db.save()
     return True
@@ -136,6 +141,11 @@ def authenticate_user(username, password):
     if not password_key in user:
         return False
     return user[password_key] == password
+
+def verify_user_exists(username):
+    db = get_db()
+    users = db.get(users_key)
+    return users[username] != None
 
 def get_top_list():
     db = get_db()

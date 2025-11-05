@@ -54,7 +54,7 @@ def get_items():
 
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_item_list(data, orderValue, order, tags, tagRequirements)))
+                          response = json.dumps(dataservice.get_item_list(type, orderValue, order, tags, tagRequirements)))
 
 
 
@@ -64,7 +64,6 @@ def create_account():
     password = request.form["password"]
     if not dataservice.add_user(username, password):
         return flask.redirect("/index.html")
-        '''return flask.Response(400)'''
     return flask.redirect("/index.html")
 
 

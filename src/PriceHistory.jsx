@@ -2,7 +2,7 @@ import './Login.css'
 import React, { useEffect } from "react";
 //import { displayTopLevel, displayTypes, displayTags } from "./loginScript"; 
 
-function Listings() {
+function PriceHistory() {
 
   //<> is a React Fragment that doesn't include extra DOM elements
 
@@ -16,11 +16,11 @@ function Listings() {
     <> 
       <main>
 
-      <h1>Listings</h1>
-
+        <h1>Price History</h1>
+      
       </main>
     </>
   )
 }
 
-export default Listings
+export default PriceHistory
