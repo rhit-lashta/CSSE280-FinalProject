@@ -6,7 +6,7 @@ global_db = None
 db_path = 'marketplace_data.db'
 
 data_key = "dataMain"
-type_key = "types" 
+type_key = "type" 
 tag_key = "tags"
 sold_key = "sold"
 date_key = "date"
@@ -92,16 +92,16 @@ def add_placeholder_values():
     db = get_db()
 
     types = db.get(data_key)[type_key]
-    types["lofts"] = {"loft1":{sold_key:"100", data_key:"10/29/2025"},
-                      "loft2":{sold_key:"150", data_key:"10/30/2025"}}
-    types["lights"] = {"light1":{sold_key:"30", data_key:"10/30/2025"}}
+    types["lofts"] = {"loft1":{sold_key:100.00, data_key:"10/29/2025"},
+                      "loft2":{sold_key:150.00, data_key:"10/30/2025"}}
+    types["lights"] = {"light1":{sold_key:30.00, data_key:"10/30/2025"}}
 
     tags = db.get(data_key)[tag_key]
     tags["wooden"] = "1"
     tags["metal"] = "2"
 
     users = db.get(users_key)
-    item1 = {itemType_key:"loft", price_key:"70", tag_key:["wooden","metal"], image_key:"images/test.jpg", description_key:"text"}
+    item1 = {itemType_key:"loft", price_key:70.00, tag_key:["wooden","metal"], image_key:"images/test.jpg", description_key:"text"}
     users["user1"] = {password_key:"password123",
                       email_key:"blank@gmail.com", 
                       phone_key:"111-111-1111", 
@@ -145,7 +145,7 @@ def authenticate_user(username, password):
 def verify_user_exists(username):
     db = get_db()
     users = db.get(users_key)
-    return users[username] != None
+    return username in users
 
 def get_top_list():
     db = get_db()
@@ -185,18 +185,16 @@ def get_item_list(type, orderValue, order, tags, tagRequirements):
     users = db.get(users_key)
     items = []
 
-    for userName in users:
-        userItems = users[userName][item_key]
+    for username in users:
+        userItems = users[username][item_key]
         for itemName in userItems:
             itemTraits = userItems[itemName]
-            if ((type == "" or type == itemTraits[itemType_key]) and (check_item_tags(itemTraits[tag_key], tags, tagRequirements))):
+            if ((type == "" or type == itemTraits[type_key]) and (check_item_tags(itemTraits[tag_key], tags, tagRequirements))):
                 newItem = [itemName, itemTraits]
                 items.append(newItem)
 
     if (orderValue == "price"):
         items = sorted(items, key=lambda items: order * (int(items[1][price_key])))
-
-    items = items
   
     return items
 
@@ -214,6 +212,46 @@ def check_item_tags(itemTags, tags, tagRequirements):
                 break
 
     return correctTags >= tagRequirements
+
+
+def get_user_items_list(username):
+    db = get_db()
+    users = db.get(users_key)
+    userItems = users[username][item_key]
+    items = []
+
+    for itemName in userItems:
+        itemTraits = userItems[itemName]
+        newItem = [itemName, itemTraits]
+        items.append(newItem)
+  
+    return items
+
+def get_profile(username):
+    db = get_db()
+    users = db.get(users_key)
+    userData = users[username]
+  
+    return [userData]
+
+def create_new_item(username, itemName, photo, type, price, tags, description):
+    db = get_db()
+    users = db.get(users_key)
+    userItems = users[username][item_key]
+
+
+    newItem = {
+		        	itemType_key:type,
+			        price_key:price,
+			        tag_key:tags,
+			        image_key:photo,
+			        description_key:description
+		        } 
+    
+    userItems[itemName] = newItem
+    db.save()
+  
+    return True
 
     
 

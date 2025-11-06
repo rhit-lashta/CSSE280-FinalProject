@@ -16,8 +16,8 @@ function App() {
           <Link to="/listings/itemPage">Item Page</Link>
           <Link to="/profile">Profile</Link>
           <Link to="/profile/yourListings">Listings</Link>
-          <Link to="/profile/yourListings/addListing">Listings</Link>
-          <Link to="/priceHistory">Listings</Link>
+          <Link to="/profile/yourListings/addListing">AddListing</Link>
+          <Link to="/priceHistory">PriceHistory</Link>
         </nav>
   
         <Routes>

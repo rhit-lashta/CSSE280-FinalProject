@@ -71,6 +71,27 @@ def get_tags():
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_tags_list()))
 
+@app.get("/userItems")
+@jwt_required()
+def get_user_items():
+    username = get_jwt_identity()
+    if (dataservice.verify_user_exists(username) == False):
+        return flask.Response(status="401")
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_user_items_list(username)))
+
+@app.get("/profile")
+@jwt_required()
+def get_profile():
+    username = get_jwt_identity()
+    if (dataservice.verify_user_exists(username) == False):
+        return flask.Response(status="401")
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_profile(username)))
+
+
 @app.post("/items")
 @jwt_required()
 def get_items():
@@ -88,6 +109,26 @@ def get_items():
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_item_list(type, orderValue, order, tags, tagRequirements)))
 
+@app.post("/item")
+@jwt_required()
+def add_item():
+    username = get_jwt_identity()
+    if (dataservice.verify_user_exists(username) == False):
+        return flask.Response(status="401")
+    data = request.get_json()
+
+    itemName = data.get("name")
+    price = float(data.get("price"))
+    type = data.get("type")
+    tags = data.get("tags")
+    description = data.get("description")
+    filepath = data.get("photo")
+    ##filepath = process_image_file(data.get("photo"))
+
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.create_new_item(username, itemName, filepath, type, price, tags, description)))
+
 
 
 @app.get("/shutdown")
@@ -96,6 +137,28 @@ def shutdown():
     if (dataservice.verify_user_exists(get_jwt_identity()) == False):
         return flask.Response(status="401")
     os._exit(0)
+
+# File Processing Code Below
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def process_image_file(request):
+    # check if the post request has the file part
+    if 'imageData' not in request.files:
+        return None
+    file = request.files['imageData']
+    # If the user does not select a file, the browser submits an
+    # empty file without a filename.
+    if file.filename == '':
+        return None
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['IMAGE_FOLDER'], filename)
+        print(os.getcwd())
+        file.save(filepath)
+        return filepath
 
 
 if __name__ == "__main__":

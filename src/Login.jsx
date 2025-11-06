@@ -1,6 +1,6 @@
 import './Login.css'
 import React, { useEffect } from "react";
-import { displayTopLevel, login, displayTypes, displayTags, displayItems } from "./scriptMain"; 
+import { login} from "./scriptMain"; 
 
 function Login() {
 
@@ -8,10 +8,7 @@ function Login() {
 
   // Use Effects once at the start
   useEffect(() => {
-    displayTopLevel()
-    displayTypes()
-    displayTags()
-    displayItems()
+
   }, []);
   
 
@@ -42,25 +39,8 @@ function Login() {
                     <a href="#" id="switch" onclick="swapBetweenLoginAndCreate()">Switch to Create Account</a>
                 </p>
             </div>
-            <div>
-                <p> Database Top Level: </p>
-                <div id="topLevel"></div>
-            </div>
 
-            <div>
-                <p> Types: </p>
-                <div id="types"></div>
-            </div>
-
-            <div>
-                <p> Tags: </p>
-                <div id="tags"></div>
-            </div>
-
-            <div>
-                <p> Items: </p>
-                <div id="items"></div>
-            </div>
+            <img src="/images/testImage.jpg" alt = "testImage" style={{ width: '200px', margin: '10px' }}/>
         </section>
       </main>
     </>

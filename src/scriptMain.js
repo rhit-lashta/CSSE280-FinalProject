@@ -83,7 +83,7 @@ export async function displayTopLevel() {
     }
 }
 
-export async function displayTypes() {
+export async function loadTypes() {
     let options = {
         method: 'GET'
     }
@@ -91,18 +91,39 @@ export async function displayTypes() {
     try {
         let response = await fetch("/types", options);
         if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
             throw new Error(`Response status: ${response.status}`);
         }
         typeArray = await response.json();
 
+        //displayTypes()
+        return typeArray;
 
-        let types = "";
+    }
+    catch (ex) {
+        console.error(ex);
+        return [];
+    }
+}
+
+export function getTypes() {
+    let types = [];
+
+    for (let i = 0; i < typeArray.length; i++) {
+        types.append = typeArray[i][0];
+    }
+
+    return types;
+}
+
+function displayTypes() {
+    let types = "";
         for (let i = 0; i < typeArray.length; i++) {
-            response = typeArray[i];
+            let response = typeArray[i];
             let items = "{";
             for (let itemName in response[1]) {
-                //let itemProperties = response[1].itemName
-                //let itemTraits = "{sold:" + itemProperties.sold + ", date:" + itemProperties.date + "}"
                 let itemTraits = "test"
 
                 items += itemName + ": " + itemTraits + ", ";
@@ -115,14 +136,9 @@ export async function displayTypes() {
 
         let topData = document.querySelector("#types")     
         topData.innerHTML = types;
-
-    }
-    catch (ex) {
-        console.error(ex);
-    }
 }
 
-export async function displayTags() {
+export async function loadTags() {
     let options = {
         method: 'GET'
     }
@@ -130,19 +146,15 @@ export async function displayTags() {
     try {
         let response = await fetch("/tags", options);
         if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
             throw new Error(`Response status: ${response.status}`);
         }
         tagArray = await response.json();
+        return tagArray;
 
-        // This is an example
-        let tagsDisplay = "["
-        for (let i = 0; i < tagArray.length; i++) {
-            tagsDisplay += "[" + tagArray[i][0] + ", " + tagArray[i][1] + "],"
-        }
-        tagsDisplay += "]"
-
-        let topData = document.querySelector("#tags")     
-        topData.innerHTML = tagsDisplay;
+        //displayTags()
 
     }
     catch (ex) {
@@ -150,8 +162,20 @@ export async function displayTags() {
     }
 }
 
+function displayTags() {
+    // This is an example
+    let tagsDisplay = "["
+    for (let i = 0; i < tagArray.length; i++) {
+        tagsDisplay += "[" + tagArray[i][0] + ", " + tagArray[i][1] + "],"
+    }
+    tagsDisplay += "]"
 
-export async function displayItems() {
+    let topData = document.querySelector("#tags")     
+    topData.innerHTML = tagsDisplay;
+}
+
+
+export async function loadItems() {
 
     //let type = document.querySelector("#type") 
     //let orderValue = document.querySelector("#orderValue") 
@@ -175,32 +199,161 @@ export async function displayItems() {
     };
     addAuthHeader(options)
 
-
     try {
         let response = await fetch("/items", options)
         if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
             throw new Error(`Response status: ${response.status}`);
         }
         itemsArray = await response.json();
 
-        let itemDisplay = "["
-        for (let i = 0; i < itemsArray.length; i++) {
-            let itemData = itemsArray[i][1]
-            let itemValues = "{"
-            for (let key in itemsArray[i][1])
-                itemValues += key + ": " + itemData[key] + ", "
-            itemValues += "}"
+        displayItems()
 
-            itemDisplay += "[" + itemsArray[i][0] + ", " + itemValues + "],"
-        }
-        itemDisplay += "]"
-
-        let itemHtml = document.querySelector("#items")     
-        itemHtml.innerHTML = itemDisplay;
+        
     }
     catch (ex) {
         console.error(ex);
     }
+
+}
+
+function displayItems() {
+    let itemDisplay = "["
+    for (let i = 0; i < itemsArray.length; i++) {
+        let itemData = itemsArray[i][1]
+        let itemValues = "{"
+        for (let key in itemsArray[i][1])
+            itemValues += key + ": " + itemData[key] + ", "
+        itemValues += "}"
+
+        itemDisplay += "[" + itemsArray[i][0] + ", " + itemValues + "],"
+    }
+    itemDisplay += "]"
+
+    let itemHtml = document.querySelector("#items")     
+    itemHtml.innerHTML = itemDisplay;
+}
+
+export async function loadUserItems() {
+
+    let options = {
+        method: 'GET'
+    }
+    addAuthHeader(options)
+
+    try {
+        let response = await fetch("/userItems", options)
+        if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
+            throw new Error(`Response status: ${response.status}`);
+        }
+        itemsArray = await response.json();
+
+        displayItems()
+
+        
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+
+}
+
+export async function createNewItem(itemName, price, type, photo, tags, description) {
+
+    let data = {
+        "name": itemName,
+        "price": price,
+        "type": type, 
+        "photo": photo,
+        "tags": tags,
+        "description": description,
+    }
+    let options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    };
+    addAuthHeader(options)
+
+    try {
+        let response = await fetch("/item", options)
+        if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
+            throw new Error(`Response status: ${response.status}`);
+        }
+        let success = await response.json();
+
+        if (success) {
+            window.location.href = "/index.html/#/profile/yourListings";
+        }
+
+        
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+
+}
+
+export function getPriceWidget(allTypes, type, timeSpan) {
+
+    let items = null;
+    for (let i = 0; i < allTypes.length; i++) {
+        if (allTypes[i][0] == type) {
+            items = allTypes[i][1]
+        }
+
+    }
+
+    //return 0;
+    let currentDate = new Date();
+    let year = currentDate.getFullYear(); 
+    let month = currentDate.getMonth(); 
+    let day = currentDate.getDate();
+
+    month -= timeSpan;
+    if (month <= 0) {
+        month += 12;
+        year -= 1;
+    }
+
+
+    let itemWidget = [0,[]];
+    // Item Widget = [avg Price, [items in date]]
+    
+
+    let totalPrice = 0;
+    let totalItems = 0;
+
+    
+
+    for (let item in items) {
+        
+        let itemData = items[item]
+        let itemDate = itemData["dataMain"]
+        let dateParts = itemDate.split("/");
+        // [Month, Day, Year] //
+        if (dateParts[0] >= month || dateParts[2] >= year) {
+            totalItems += 1;
+            totalPrice += itemData["sold"]
+            
+        }
+        
+
+    }
+
+    itemWidget[0] = totalPrice / totalItems;
+
+    return itemWidget
 
 }
 
