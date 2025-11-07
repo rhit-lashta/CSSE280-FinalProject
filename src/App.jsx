@@ -10,8 +10,9 @@ import PriceHistory from './PriceHistory.jsx';
 function App() {
     return (
       <>
-        <nav>
-          <Link to="/">Login</Link> {" "}
+        <nav id="mainBanner">
+          <img src="/images/testImage.jpg" alt = "testImage" style={{ height: '60px', margin: '10px' }}/>
+          <Link to="/">Login</Link>
           <Link to="/listings">Listings</Link>
           <Link to="/listings/itemPage">Item Page</Link>
           <Link to="/profile">Profile</Link>

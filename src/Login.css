@@ -1,16 +1,32 @@
 body {
-    background-color: lightblue;
-    
+    background-color: white;
+}
+
+#mainBanner {
+    background-color: #800000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#mainBanner a {
+    color: white;
+    text-decoration: none;
+    padding: 20px
+}
+
+#mainBanner a:hover {
+    background-color: #600000;
 }
 
 h1 {
     font-size: 5vh;
 }
+
 li:hover {
     background-color: darkgrey;
     color: white;
 }
-
  
 #list2 li {
     text-decoration: line-through;
