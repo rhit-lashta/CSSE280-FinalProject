@@ -314,7 +314,6 @@ export function getPriceWidget(allTypes, type, timeSpan) {
 
     }
 
-    //return 0;
     let currentDate = new Date();
     let year = currentDate.getFullYear(); 
     let month = currentDate.getMonth(); 
@@ -326,6 +325,7 @@ export function getPriceWidget(allTypes, type, timeSpan) {
         year -= 1;
     }
 
+    
 
     let itemWidget = [0,[]];
     // Item Widget = [avg Price, [items in date]]
@@ -342,7 +342,7 @@ export function getPriceWidget(allTypes, type, timeSpan) {
         let itemDate = itemData["dataMain"]
         let dateParts = itemDate.split("/");
         // [Month, Day, Year] //
-        if (dateParts[0] >= month || dateParts[2] >= year) {
+        if ((dateParts[2] > year) || (dateParts[2] == year && dateParts[0] > month) || (dateParts[2] == year && dateParts[0] == month && dateParts[0] >= day)) {
             totalItems += 1;
             totalPrice += itemData["sold"]
             
@@ -354,6 +354,5 @@ export function getPriceWidget(allTypes, type, timeSpan) {
     itemWidget[0] = totalPrice / totalItems;
 
     return itemWidget
-
 }
 

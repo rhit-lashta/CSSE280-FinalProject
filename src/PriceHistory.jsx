@@ -51,11 +51,11 @@ function PriceHistory() {
     let {value} = e.target;
     setTimeData(value)
 
-    handlePrice()
+    handlePrice(value)
   };
 
-  let handlePrice = () => {
-    let price = getPriceWidget(fullTypeArray, currentType, currentTime)[0]
+  let handlePrice = (time) => {
+    let price = getPriceWidget(fullTypeArray, currentType, time)[0]
     setPrice(price);
   };
   
