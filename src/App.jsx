@@ -21,6 +21,7 @@ function App() {
           <Link to="/priceHistory">PriceHistory</Link>
         </nav>
   
+        <nav id="main">
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/listings" element={<Listings />} />
@@ -30,6 +31,7 @@ function App() {
           <Route path="/profile/yourListings/addListing" element={<AddListing />} />
           <Route path="/priceHistory" element={<PriceHistory />} />
         </Routes>
+        </nav>
       </>
     );
   }
