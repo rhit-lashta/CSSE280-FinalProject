@@ -6,8 +6,6 @@ function AddListing() {
   
   let [typeArray, setTypeArray] = useState([]);
   let [tagArray, setTagArray] = useState([]);
-  //let [loading, setLoading] = useState(true);
-  //let [error, setError] = useState(null);
 
   useEffect(() => {
 
@@ -20,9 +18,8 @@ function AddListing() {
           types.push(typesData[i][0]);
         }
         setTypeArray(types);
-        //setError(null);
+
       } catch (error) {
-        //setError(error.message);
         setTypeArray([]);
       } finally {
         //setLoading(false);
@@ -123,7 +120,7 @@ function AddListing() {
 
           <div>
             <label for="tagSelector"> Tags: </label>
-            <select id="tagSelector" name="tag" className="tagSelector" value={formData.tags} onChange={handleTagChange}>
+            <select id="tagSelector" name="tag" className="tagSelector" onChange={handleTagChange}>
               <option value="">--Select a Tag--</option>
               {tagArray.map((tagOption) => (
                 <option key={tagOption} value={tagOption}>
@@ -135,7 +132,7 @@ function AddListing() {
             <div className="selected-tags">
               {formData.tags.length > 0 ? (
                 formData.tags.map((tag) => (
-                  <p className="tags"> {tag} </p>
+                  <button className="tags" onClick> {tag} - </button>
                 ))
               ) : (
                 <p className="no-tags">No tags selected</p>

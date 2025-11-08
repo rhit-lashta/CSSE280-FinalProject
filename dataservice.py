@@ -93,8 +93,11 @@ def add_placeholder_values():
 
     types = db.get(data_key)[type_key]
     types["lofts"] = {"loft1":{sold_key:100.00, data_key:"10/29/2025"},
-                      "loft2":{sold_key:150.00, data_key:"10/30/2025"}}
-    types["lights"] = {"light1":{sold_key:30.00, data_key:"10/30/2025"}}
+                      "loft2":{sold_key:150.00, data_key:"10/30/2025"},
+                      "loft3":{sold_key:200.00, data_key:"8/30/2025"},
+                      "loft4":{sold_key:1000.00, data_key:"12/25/2024"}}
+    types["lights"] = {"light1":{sold_key:30.00, data_key:"10/30/2025"},
+                       "light2":{sold_key:40.00, data_key:"5/30/2025"}}
 
     tags = db.get(data_key)[tag_key]
     tags["wooden"] = "1"

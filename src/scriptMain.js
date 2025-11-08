@@ -2,6 +2,11 @@ let tagArray = []
 let typeArray = []
 let itemsArray = []
 
+let monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
+
 
 function logout() {
     localStorage.removeItem("access_token");
@@ -303,57 +308,3 @@ export async function createNewItem(itemName, price, type, photo, tags, descript
     }
 
 }
-
-export function getPriceWidget(allTypes, type, timeSpan) {
-
-    let items = null;
-    for (let i = 0; i < allTypes.length; i++) {
-        if (allTypes[i][0] == type) {
-            items = allTypes[i][1]
-        }
-
-    }
-
-    //return 0;
-    let currentDate = new Date();
-    let year = currentDate.getFullYear(); 
-    let month = currentDate.getMonth(); 
-    let day = currentDate.getDate();
-
-    month -= timeSpan;
-    if (month <= 0) {
-        month += 12;
-        year -= 1;
-    }
-
-
-    let itemWidget = [0,[]];
-    // Item Widget = [avg Price, [items in date]]
-    
-
-    let totalPrice = 0;
-    let totalItems = 0;
-
-    
-
-    for (let item in items) {
-        
-        let itemData = items[item]
-        let itemDate = itemData["dataMain"]
-        let dateParts = itemDate.split("/");
-        // [Month, Day, Year] //
-        if (dateParts[0] >= month || dateParts[2] >= year) {
-            totalItems += 1;
-            totalPrice += itemData["sold"]
-            
-        }
-        
-
-    }
-
-    itemWidget[0] = totalPrice / totalItems;
-
-    return itemWidget
-
-}
-

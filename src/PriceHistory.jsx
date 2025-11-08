@@ -1,16 +1,17 @@
 import './Login.css'
 import React, { useEffect, useState,} from "react";
-import { loadTypes, getPriceWidget } from "./scriptMain"; 
+import { loadTypes } from "./scriptMain";
+import { getPriceWidget } from "./marketCalulations"
+import { BarChart } from '@mui/x-charts/BarChart';
 
-
-// https://mui.com/x/react-charts/bars/ Bar graph source//
 
 function PriceHistory() {
 
   let [typeArray, setTypeArray] = useState([]);
   let [fullTypeArray, setFullTypeArray] = useState([]);
 
-  let dateOptionsArray = [["1 month", 1], ["3 months", 3], ["1 year", 12]]; 
+  
+  let dateOptionsArray = [["1 Week", 0.25], ["2 Weeks", 0.49], ["1 Month", 1], ["3 Months", 3], ["6 Months", 6], ["1 Year", 12], ["2 Years", 24], ["3 Years", 36], ["5 Years", 120], ["10 Years", 240]]; 
 
   useEffect(() => {
     
@@ -39,7 +40,10 @@ function PriceHistory() {
 
   let [currentType, setTypeData] = useState("");
   let [currentTime, setTimeData] = useState("");
+
   let [currentAvgPrice, setPrice] = useState(0);
+  let [dates, setDates] = useState(["Empty"]);
+  let [dateSales, setDateSales] = useState([0]);
 
   let handleTypeChange = (e) => {
     let {value} = e.target;
@@ -51,12 +55,14 @@ function PriceHistory() {
     let {value} = e.target;
     setTimeData(value)
 
-    handlePrice()
+    handlePrice(value)
   };
 
-  let handlePrice = () => {
-    let price = getPriceWidget(fullTypeArray, currentType, currentTime)[0]
-    setPrice(price);
+  let handlePrice = (time) => {
+    let priceInformation = getPriceWidget(fullTypeArray, currentType, time)
+    setPrice(priceInformation[0]);
+    setDates(priceInformation[1]);
+    setDateSales(priceInformation[2])
   };
   
 
@@ -96,18 +102,25 @@ function PriceHistory() {
         {(currentTime != "" && currentType != "") && (
 
           <div>
-            <div class ="chart">
-              <div class="barGraphContainer">
-                This is the content inside the box.
-              </div>
-            </div>
+            <BarChart
+              xAxis={[
+            {
+            id: 'Dates',
+              data: dates,
+              },
+            ]}
+            series={[
+            {
+              data: dateSales,
+            },
+            ]}
+            height={300}
+            />
             <div>Current value: {currentAvgPrice}</div>
           </div>
 
           )
         }
-            
-      
       </main>
     </>
   )
