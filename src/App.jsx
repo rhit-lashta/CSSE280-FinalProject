@@ -12,6 +12,8 @@ import PriceHistory from './PriceHistory.jsx';
 // - https://react.dev/reference/react/useState
 // - https://learn.zybooks.com/zybook/ROSEHULMANCSSE280Fall2025 
 // - https://react.dev/reference/react 
+// - https://stackoverflow.com/questions
+// - https://mui.com/x/react-charts/quickstart/#peer-dependencies 
 
 
 function App() {
