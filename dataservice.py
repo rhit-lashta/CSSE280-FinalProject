@@ -95,7 +95,11 @@ def add_placeholder_values():
     types["lofts"] = {"loft1":{sold_key:100.00, data_key:"10/29/2025"},
                       "loft2":{sold_key:150.00, data_key:"10/30/2025"},
                       "loft3":{sold_key:200.00, data_key:"8/30/2025"},
-                      "loft4":{sold_key:1000.00, data_key:"12/25/2024"}}
+                      "loft4":{sold_key:300.00, data_key:"12/25/2024"},
+                      "loft5":{sold_key:100.00, data_key:"11/6/2025"},
+                      "loft6":{sold_key:150.00, data_key:"4/10/2022"},
+                      "loft7":{sold_key:75.00, data_key:"2/3/2017"}}
+                      
     types["lights"] = {"light1":{sold_key:30.00, data_key:"10/30/2025"},
                        "light2":{sold_key:40.00, data_key:"5/30/2025"}}
 
