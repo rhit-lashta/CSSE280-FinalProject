@@ -108,13 +108,15 @@ def add_placeholder_values():
     tags["metal"] = "2"
 
     users = db.get(users_key)
-    item1 = {itemType_key:"loft", price_key:70.00, tag_key:["wooden","metal"], image_key:"images/test.jpg", description_key:"text"}
+    item1 = {itemType_key:"loft", price_key:70.00, tag_key:["wooden","metal"], image_key:"/images/testImage.jpg", description_key:"text"}
+    item2 = {itemType_key:"loft", price_key:30.00, tag_key:["wooden"], image_key:"/images/testImage.jpg", description_key:"text2"}
     users["user1"] = {password_key:"password123",
                       email_key:"blank@gmail.com", 
                       phone_key:"111-111-1111", 
                       description_key:"How to get in contact with me", 
                       profile_key: "images/test.jpg",
-                      item_key:{"Item1":item1}}
+                      item_key:{"Item1":item1,"Item2":item2}}
+    
 
     db.save()
 

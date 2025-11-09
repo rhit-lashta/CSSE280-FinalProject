@@ -1,6 +1,6 @@
 import './Login.css'
 import React, { useEffect, useState,} from "react";
-import { loadTypes } from "./scriptMain";
+import { loadTypes, loadItems } from "./scriptMain";
 import { getPriceWidget } from "./marketCalulations"
 import { BarChart } from '@mui/x-charts/BarChart';
 

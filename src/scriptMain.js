@@ -213,8 +213,9 @@ export async function loadItems() {
             throw new Error(`Response status: ${response.status}`);
         }
         itemsArray = await response.json();
+        return itemsArray
 
-        displayItems()
+        //displayItems()
 
         
     }
@@ -267,6 +268,8 @@ export async function loadUserItems() {
     }
 
 }
+
+
 
 export async function createNewItem(itemName, price, type, photo, tags, description) {
 
