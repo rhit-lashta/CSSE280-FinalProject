@@ -31,11 +31,11 @@ Defualt Data Structure
 Pickle DB = {
 	“dataMain”: {
 		types: {
-            “lofts”:{
+            “loft”:{
 	            “loft1”:{“sold”:”100”, “date”:”10/29/2025”},
                 “loft2”:{“sold”:”150”, “date”:”10/30/2025”},
             }
-            “lights”:{
+            “light”:{
 	            “light1”:{“sold”:”30”, “date”:”10/29/2025”},
             }
         },
@@ -92,7 +92,7 @@ def add_placeholder_values():
     db = get_db()
 
     types = db.get(data_key)[type_key]
-    types["lofts"] = {"loft1":{sold_key:100.00, data_key:"10/29/2025"},
+    types["loft"] = {"loft1":{sold_key:100.00, data_key:"10/29/2025"},
                       "loft2":{sold_key:150.00, data_key:"10/30/2025"},
                       "loft3":{sold_key:200.00, data_key:"8/30/2025"},
                       "loft4":{sold_key:300.00, data_key:"12/25/2024"},
@@ -100,7 +100,7 @@ def add_placeholder_values():
                       "loft6":{sold_key:150.00, data_key:"4/10/2022"},
                       "loft7":{sold_key:75.00, data_key:"2/3/2017"}}
                       
-    types["lights"] = {"light1":{sold_key:30.00, data_key:"10/30/2025"},
+    types["light"] = {"light1":{sold_key:30.00, data_key:"10/30/2025"},
                        "light2":{sold_key:40.00, data_key:"5/30/2025"}}
 
     tags = db.get(data_key)[tag_key]
@@ -110,12 +110,19 @@ def add_placeholder_values():
     users = db.get(users_key)
     item1 = {itemType_key:"loft", price_key:70.00, tag_key:["wooden","metal"], image_key:"/images/testImage.jpg", description_key:"text"}
     item2 = {itemType_key:"loft", price_key:30.00, tag_key:["wooden"], image_key:"/images/testImage.jpg", description_key:"text2"}
+    item3 = {itemType_key:"light", price_key:10.00, tag_key:["wooden"], image_key:"/images/testImage.jpg", description_key:"lightText"}
     users["user1"] = {password_key:"password123",
                       email_key:"blank@gmail.com", 
                       phone_key:"111-111-1111", 
                       description_key:"How to get in contact with me", 
                       profile_key: "images/test.jpg",
                       item_key:{"Item1":item1,"Item2":item2}}
+    users["user2"] = {password_key:"password123",
+                      email_key:"blank@gmail.com", 
+                      phone_key:"111-111-1111", 
+                      description_key:"How to get in contact with me", 
+                      profile_key: "images/test.jpg",
+                      item_key:{"Item3":item3}}
     
 
     db.save()
@@ -199,10 +206,10 @@ def get_item_list(type, orderValue, order, tags, tagRequirements):
         for itemName in userItems:
             itemTraits = userItems[itemName]
             if ((type == "" or type == itemTraits[type_key]) and (check_item_tags(itemTraits[tag_key], tags, tagRequirements))):
-                newItem = [itemName, itemTraits]
+                newItem = [itemName, itemTraits, username]
                 items.append(newItem)
 
-    if (orderValue == "price"):
+    if (orderValue == "Price"):
         items = sorted(items, key=lambda items: order * (int(items[1][price_key])))
   
     return items
