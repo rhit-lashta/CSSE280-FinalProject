@@ -13,6 +13,7 @@ date_key = "date"
 
 users_key = "users"
 password_key = "password"
+info_key = "info"
 email_key = "email"
 phone_key = "phoneNumber"
 contact_key = "contactDescription"
@@ -112,17 +113,23 @@ def add_placeholder_values():
     item2 = {itemType_key:"loft", price_key:30.00, tag_key:["wooden"], image_key:"/images/testImage.jpg", description_key:"text2"}
     item3 = {itemType_key:"light", price_key:10.00, tag_key:["wooden"], image_key:"/images/testImage.jpg", description_key:"lightText"}
     users["user1"] = {password_key:"password123",
-                      email_key:"blank@gmail.com", 
-                      phone_key:"111-111-1111", 
-                      description_key:"How to get in contact with me", 
-                      profile_key: "images/test.jpg",
-                      item_key:{"Item1":item1,"Item2":item2}}
-    users["user2"] = {password_key:"password123",
-                      email_key:"blank@gmail.com", 
-                      phone_key:"111-111-1111", 
-                      description_key:"How to get in contact with me", 
-                      profile_key: "images/test.jpg",
-                      item_key:{"Item3":item3}}
+                      info_key:{
+                        email_key:"blank@gmail.com", 
+                        phone_key:"111-111-1111", 
+                        description_key:"How to get in contact with me", 
+                        profile_key: "images/test.jpg",
+                      },
+                      item_key:{"Item1":item1,"Item2":item2, "Item3":item3}
+                    }
+    users["user2"] = {password_key:"password1234",
+                      info_key:{
+                        email_key:"blank@gmail.com", 
+                        phone_key:"111-111-1111", 
+                        description_key:"How to get in contact with me", 
+                        profile_key: "images/test.jpg",
+                      },
+                      item_key:{"Item3":item3}
+                    }
     
 
     db.save()
@@ -139,10 +146,7 @@ def add_user(username, password):
     if username in users:
         return False
     new_user = {password_key:password,
-                email_key:"", 
-                phone_key:"", 
-                description_key:"", 
-                profile_key: "",
+                info_key:{email_key:"", phone_key:"", description_key:"", profile_key: ""},
                 item_key:{}}
     users[username] = new_user
     db.save()
@@ -246,7 +250,7 @@ def get_user_items_list(username):
 def get_profile(username):
     db = get_db()
     users = db.get(users_key)
-    userData = users[username]
+    userData = users[username][info_key]
   
     return [userData]
 
