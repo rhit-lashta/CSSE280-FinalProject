@@ -50,13 +50,13 @@ function getPriceWidgetMonths(items, timeSpan, day, month, year) {
     }
     
 
-    year -= Math.floor(12 / timeSpan)
-    let newTimeSpan = timeSpan - Math.floor(12 / timeSpan)
+    let oldestYear = year - Math.floor(timeSpan / 12)
+    let newTimeSpan = timeSpan - Math.floor(timeSpan / 12) * 12
 
-    month -= newTimeSpan;
-    if (month <= 0) {
-        month += 12;
-        year -= 1;
+    let oldestMonth = month - newTimeSpan;
+    if (oldestMonth <= 0) {
+        oldestMonth += 12;
+        oldestYear -= 1;
     }
     
     let dateAveragePrices = [barGraphXAxis.length]
@@ -72,9 +72,8 @@ function getPriceWidgetMonths(items, timeSpan, day, month, year) {
         let itemDate = itemData["dataMain"]
         let dateParts = itemDate.split("/");
         // [Month, Day, Year] //
-        if ((dateParts[2] > year) ||
-            (dateParts[2] == year && dateParts[0] > month) || 
-            (dateParts[2] == year && dateParts[0] == month && dateParts[0] >= day)) {
+        if ((dateParts[2] > oldestYear) ||
+            (dateParts[2] == oldestYear && dateParts[0] > oldestMonth + 1)) {
             totalItems += 1;
             totalPrice += itemData["sold"]
 
@@ -115,6 +114,7 @@ function getPriceWidgetDays(items, timeSpan, day, month, year) {
     let lastMonth = month - 1;
     if (lastMonth <= 0) {
         lastMonth = 12;
+        
     }
 
     let barGraphXAxis = []
@@ -129,10 +129,18 @@ function getPriceWidgetDays(items, timeSpan, day, month, year) {
             currentMonth = lastMonth;
         }
     }
-    
 
-    //year -= Math.floor(12 / timeSpan)
-    //let newTimeSpan = timeSpan - Math.floor(12 / timeSpan)
+    let oldestYear = year;
+    let oldestMonth = month;
+    let oldestDay = day - timeSpanDays;
+
+    if (oldestDay <= 0) {
+        oldestMonth = lastMonth
+        if (oldestMonth == 12) {
+            oldestYear -= 1;
+        }
+        oldestDay += monthDays[oldestMonth - 1];
+    }
 
     
 
@@ -161,14 +169,18 @@ function getPriceWidgetDays(items, timeSpan, day, month, year) {
         let itemData = items[item]
         let itemDate = itemData["dataMain"]
         let dateParts = itemDate.split("/");
+        for (let i = 0; i < dateParts.length; i++) {
+            dateParts[i] = parseInt(dateParts[i])
+        }
+
         // [Month, Day, Year] //
-        if ((dateParts[2] > year) ||
-            (dateParts[2] == year && dateParts[0] > month) || 
-            (dateParts[2] == year && dateParts[0] == month && dateParts[0] >= day)) {
+        if ((dateParts[2] > oldestYear) ||
+            (dateParts[2] == oldestYear && dateParts[0] > oldestMonth + 1) || 
+            (dateParts[2] == oldestYear && dateParts[0] == oldestMonth + 1 && dateParts[1] >= oldestDay + 1)) {
             totalItems += 1;
             totalPrice += itemData["sold"]
 
-            let dateKey = monthNames[dateParts[0] - 1] + " - " + dateParts[2];
+            let dateKey = monthNames[dateParts[0] - 1] + " - " + dateParts[1];
             if (dateKey in dateAverages) {
                 let dateAverage = dateAverages[dateKey]
                 dateAverage[0] += itemData["sold"];

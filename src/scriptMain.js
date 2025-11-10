@@ -2,11 +2,6 @@ let tagArray = []
 let typeArray = []
 let itemsArray = []
 
-let monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
-
 
 function logout() {
     localStorage.removeItem("access_token");
@@ -179,21 +174,14 @@ function displayTags() {
     topData.innerHTML = tagsDisplay;
 }
 
-
-export async function loadItems() {
-
-    //let type = document.querySelector("#type") 
-    //let orderValue = document.querySelector("#orderValue") 
-    //let order = document.querySelector("#order") 
-    //let tags = document.querySelector("#tags") 
-    //let tagRequirements = document.querySelector("#tagRequirements") 
+export async function loadItems(type, orderValue, order, tags, tagRequirements) {
 
     let data = {
-        "type": "",
-        "orderValue": "",
-        "order": "0",
-        "tags": [],
-        "tagRequirements": "0"
+        "type": type,
+        "orderValue": orderValue,
+        "order": order,
+        "tags": tags,
+        "tagRequirements": tagRequirements
     }
     let options = {
         method: "POST",
@@ -213,8 +201,9 @@ export async function loadItems() {
             throw new Error(`Response status: ${response.status}`);
         }
         itemsArray = await response.json();
+        return itemsArray
 
-        displayItems()
+        //displayItems()
 
         
     }
@@ -267,6 +256,8 @@ export async function loadUserItems() {
     }
 
 }
+
+
 
 export async function createNewItem(itemName, price, type, photo, tags, description) {
 

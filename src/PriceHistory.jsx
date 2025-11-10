@@ -1,6 +1,6 @@
 import './Login.css'
 import React, { useEffect, useState,} from "react";
-import { loadTypes } from "./scriptMain";
+import { loadTypes, loadItems } from "./scriptMain";
 import { getPriceWidget } from "./marketCalulations"
 import { BarChart } from '@mui/x-charts/BarChart';
 
@@ -11,7 +11,7 @@ function PriceHistory() {
   let [fullTypeArray, setFullTypeArray] = useState([]);
 
   
-  let dateOptionsArray = [["1 Week", 0.25], ["2 Weeks", 0.49], ["1 Month", 1], ["3 Months", 3], ["6 Months", 6], ["1 Year", 12], ["2 Years", 24], ["3 Years", 36], ["5 Years", 120], ["10 Years", 240]]; 
+  let dateOptionsArray = [["1 Week", 0.25], ["2 Weeks", 0.49], ["1 Month", 1], ["3 Months", 3], ["6 Months", 6], ["1 Year", 12], ["2 Years", 24], ["3 Years", 36], ["5 Years", 60], ["10 Years", 120]]; 
 
   useEffect(() => {
     
@@ -107,11 +107,14 @@ function PriceHistory() {
             {
             id: 'Dates',
               data: dates,
-              },
+              labelString: 'Dates Sold'
+            },
+            
             ]}
             series={[
             {
               data: dateSales,
+              labelString: 'Average Price of Item'
             },
             ]}
             height={300}
