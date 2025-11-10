@@ -49,7 +49,7 @@ function Listings() {
 
     let fetchItems = async () => {
       try {
-        let itemData = await loadItems("loft", "", 0, [], 0);
+        let itemData = await loadItems("", "", 0, [], 0);
         setItemArray(itemData)
       } catch (error) {
         setItemArray([]);
