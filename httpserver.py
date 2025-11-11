@@ -128,6 +128,20 @@ def add_item():
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.create_new_item(username, itemName, filepath, type, price, tags, description)))
 
+@app.post("/get_specific_item")
+@jwt_required()
+def get_specific_item():
+    if (dataservice.verify_user_exists(get_jwt_identity()) == False):
+        return flask.Response(status="401")
+
+    data = request.get_json()
+    user = data.get("user")
+    itemName = data.get("itemName")
+
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_item(user, itemName)))
+
 
 
 @app.get("/shutdown")

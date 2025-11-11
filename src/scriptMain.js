@@ -213,6 +213,42 @@ export async function loadItems(type, orderValue, order, tags, tagRequirements) 
 
 }
 
+export async function loadItem(user, itemName) {
+
+    let data = {
+        "user":user,
+        "itemName": itemName,
+    }
+    let options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    };
+    addAuthHeader(options)
+
+    try {
+        let response = await fetch("/get_specific_item", options)
+        if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
+            throw new Error(`Response status: ${response.status}`);
+        }
+        let item = await response.json();
+        if (item[0] == null) {
+            window.location.href = "/index.html#/listings";
+        }
+
+        return item;
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+
+}
+
 function displayItems() {
     let itemDisplay = "["
     for (let i = 0; i < itemsArray.length; i++) {

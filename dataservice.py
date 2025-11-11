@@ -218,6 +218,18 @@ def get_item_list(type, orderValue, order, tags, tagRequirements):
   
     return items
 
+def get_item(user, itemName):
+    db = get_db()
+    users = db.get(users_key)
+
+    if ((user in users) and (itemName in users[user][item_key])):
+        userInfo = users[user][info_key]
+        itemTraits = users[user][item_key][itemName]
+        item = [userInfo, itemTraits]
+        return item
+    else:
+        return [None]
+
 
 def check_item_tags(itemTags, tags, tagRequirements):
 
@@ -258,7 +270,6 @@ def create_new_item(username, itemName, photo, type, price, tags, description):
     db = get_db()
     users = db.get(users_key)
     userItems = users[username][item_key]
-
 
     newItem = {
 		        	itemType_key:type,
