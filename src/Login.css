@@ -75,3 +75,26 @@ li:hover {
     padding: 15px;
     margin: 20px;
 }
+
+.profileBox {
+    border: 2px solid black;
+    width: 80%;
+    padding: 10px;
+    margin: auto;
+    justify-content: center;
+}
+
+.profileHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.profileImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* Makes image circular */
+    object-fit: cover; /* Fills in the circle completely with the image */
+    border: 1px solid black;
+}

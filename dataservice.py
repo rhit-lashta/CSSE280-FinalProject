@@ -49,10 +49,12 @@ Pickle DB = {
 	“users”: {
         “user1”: {
             “password”:”password123”,
-            “email”:”blank@gmail.com”,
-            “phoneNumber”:111-111-1111,
-            “contactDescription”:“How to get in contact with me”,
-            “profileImage”:”images/test.jpg”,
+            “Info”: {
+                “email”:”blank@gmail.com”,
+                “phoneNumber”:111-111-1111,
+                “contactDescription”:“How to get in contact with me”,
+                “profileImage”:”images/test.jpg”,
+            }
  	        “items”:{
 		        “Item1”: {
 		        	“type”:”loft”,
@@ -251,7 +253,8 @@ def get_profile(username):
     db = get_db()
     users = db.get(users_key)
     userData = users[username][info_key]
-  
+    userData["username"] = username
+    
     return [userData]
 
 def create_new_item(username, itemName, photo, type, price, tags, description):

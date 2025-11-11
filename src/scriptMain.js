@@ -1,6 +1,7 @@
 let tagArray = []
 let typeArray = []
 let itemsArray = []
+let userArray = []
 
 
 function logout() {
@@ -54,8 +55,6 @@ export async function login() {
         console.error(ex);
     }
 }
-
-
 
 export async function displayTopLevel() {
     let options = {
@@ -247,7 +246,7 @@ export async function loadUserItems() {
         }
         itemsArray = await response.json();
 
-        displayItems()
+        displayItems();
 
         
     }
@@ -256,8 +255,6 @@ export async function loadUserItems() {
     }
 
 }
-
-
 
 export async function createNewItem(itemName, price, type, photo, tags, description) {
 
@@ -299,3 +296,29 @@ export async function createNewItem(itemName, price, type, photo, tags, descript
     }
 
 }
+
+export async function loadUserInfo() {
+
+    let options = {
+        method: 'GET'
+    }
+    addAuthHeader(options)
+
+    try {
+        let response = await fetch("/profile", options)
+        
+        if (!response.ok) {
+            if(handle401(response)) {
+                return null;
+            }
+            throw new Error(`Response status: ${response.status}`);
+        }
+        userArray = await response.json();
+
+        return userArray;
+    }
+    catch (ex) {
+        return null;
+    }
+
+} 
