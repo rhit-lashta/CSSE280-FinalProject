@@ -38,6 +38,7 @@ function ItemPage() {
       <h1>Test: {location.pathname}</h1>
       <h1>{urlPeices[4]}</h1>
       <div>Listed Price: {itemData["price"]}</div>
+      <div>Type: {itemData["type"]}</div>
       <div> Tags: Tags not Working </div>
       <strong> Description: {itemData["description"]}</strong>
       <img src={itemData["image"]} alt = {itemData["image"]} style={{ width: '200px', margin: '10px' }}/>

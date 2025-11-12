@@ -266,10 +266,40 @@ def get_profile(username):
   
     return [userData]
 
+def get_profile(currentUser, username):
+    db = get_db()
+    users = db.get(users_key)
+    userData = users[username][info_key]
+
+    sameUser = (currentUser == username)
+  
+    return [username, userData, sameUser]
+
 def create_new_item(username, itemName, photo, type, price, tags, description):
     db = get_db()
     users = db.get(users_key)
     userItems = users[username][item_key]
+
+    newItem = {
+		        	itemType_key:type,
+			        price_key:price,
+			        tag_key:tags,
+			        image_key:photo,
+			        description_key:description
+		        } 
+    
+    userItems[itemName] = newItem
+    db.save()
+  
+    return True
+
+def update_item(username, oldName, itemName, photo, type, price, tags, description):
+    db = get_db()
+    users = db.get(users_key)
+    userItems = users[username][item_key]
+
+    if (oldName in userItems):
+        del userItems[oldName]
 
     newItem = {
 		        	itemType_key:type,

@@ -118,25 +118,6 @@ export function getTypes() {
     return types;
 }
 
-function displayTypes() {
-    let types = "";
-        for (let i = 0; i < typeArray.length; i++) {
-            let response = typeArray[i];
-            let items = "{";
-            for (let itemName in response[1]) {
-                let itemTraits = "test"
-
-                items += itemName + ": " + itemTraits + ", ";
-            }
-            items += "}";
-
-
-            types += "[" + response[0] + ", " + items + "] ";
-        }
-
-        let topData = document.querySelector("#types")     
-        topData.innerHTML = types;
-}
 
 export async function loadTags() {
     let options = {
@@ -162,17 +143,6 @@ export async function loadTags() {
     }
 }
 
-function displayTags() {
-    // This is an example
-    let tagsDisplay = "["
-    for (let i = 0; i < tagArray.length; i++) {
-        tagsDisplay += "[" + tagArray[i][0] + ", " + tagArray[i][1] + "],"
-    }
-    tagsDisplay += "]"
-
-    let topData = document.querySelector("#tags")     
-    topData.innerHTML = tagsDisplay;
-}
 
 export async function loadItems(type, orderValue, order, tags, tagRequirements) {
 
@@ -249,21 +219,35 @@ export async function loadItem(user, itemName) {
 
 }
 
-function displayItems() {
-    let itemDisplay = "["
-    for (let i = 0; i < itemsArray.length; i++) {
-        let itemData = itemsArray[i][1]
-        let itemValues = "{"
-        for (let key in itemsArray[i][1])
-            itemValues += key + ": " + itemData[key] + ", "
-        itemValues += "}"
 
-        itemDisplay += "[" + itemsArray[i][0] + ", " + itemValues + "],"
+export async function loadProfileInfo(user) {
+
+    let data = {
+        "user":user,
     }
-    itemDisplay += "]"
+    let options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    };
+    addAuthHeader(options)
 
-    let itemHtml = document.querySelector("#items")     
-    itemHtml.innerHTML = itemDisplay;
+    try {
+        let response = await fetch("/profile", options)
+        if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
+            throw new Error(`Response status: ${response.status}`);
+        }
+        itemsArray = await response.json();
+        return itemsArray;
+    }
+    catch (ex) {
+        console.error(ex);
+    }
 }
 
 export async function loadUserItems() {
@@ -282,8 +266,66 @@ export async function loadUserItems() {
             throw new Error(`Response status: ${response.status}`);
         }
         itemsArray = await response.json();
+        return itemsArray;
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+}
 
-        displayItems()
+
+
+export async function createNewItem(itemName, price, type, photo, tags, description) {
+
+    /*
+    let data = {
+        "name": itemName,
+        "price": price,
+        "type": type, 
+        "tags": tags,
+        "description": description,
+    }
+    //data.append("image", photo, photo.name);
+    let options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    };
+    addAuthHeader(options)
+    */
+
+    let formData = new FormData();
+
+    formData.append("name", itemName);
+    formData.append("price", price);
+    formData.append("type", type);
+    formData.append("tags", tags);
+    formData.append("description", description);
+
+    formData.append("image", photo, photo.name);
+
+    let options = {
+        method: "POST",
+        body: formData, 
+    };
+    addAuthHeader(options)
+    
+
+    try {
+        let response = await fetch("/item", options)
+        if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
+            throw new Error(`Response status: ${response.status}`);
+        }
+        let success = await response.json();
+
+        if (success) {
+            window.location.href = "/index.html/#/profile/yourListings";
+        }
 
         
     }
@@ -293,11 +335,10 @@ export async function loadUserItems() {
 
 }
 
-
-
-export async function createNewItem(itemName, price, type, photo, tags, description) {
+export async function updateItem(oldName, itemName, price, type, photo, tags, description) {
 
     let data = {
+        "oldName": oldName,
         "name": itemName,
         "price": price,
         "type": type, 
@@ -306,7 +347,39 @@ export async function createNewItem(itemName, price, type, photo, tags, descript
         "description": description,
     }
     let options = {
-        method: "POST",
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    };
+    addAuthHeader(options)
+
+    try {
+        let response = await fetch("/item", options)
+        if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
+            throw new Error(`Response status: ${response.status}`);
+        }
+        let success = await response.json();   
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+
+}
+
+export async function removeItem(itemName, sold, price) {
+
+    let data = {
+        "name": itemName,
+        "sold": sold,
+        "price": price,
+    }
+    let options = {
+        method: "DELETE",
         headers: {
             'Content-Type': 'application/json'
         },
@@ -323,10 +396,6 @@ export async function createNewItem(itemName, price, type, photo, tags, descript
             throw new Error(`Response status: ${response.status}`);
         }
         let success = await response.json();
-
-        if (success) {
-            window.location.href = "/index.html/#/profile/yourListings";
-        }
 
         
     }
