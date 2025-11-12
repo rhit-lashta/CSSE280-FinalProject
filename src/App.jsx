@@ -34,7 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/listings" element={<Listings />} />
-          <Route path="/listings/itemPage" element={<ItemPage />} />
+          <Route path="/listings/itemPage/*" element={<ItemPage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/yourListings" element={<YourListings />} />
           <Route path="/profile/yourListings/addListing" element={<AddListing />} />

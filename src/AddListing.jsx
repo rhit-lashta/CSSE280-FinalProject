@@ -54,26 +54,19 @@ function AddListing() {
     itemName: "",
     price: 0,
     type: "", 
-    photo: "",
     tags: [],
     description: "",
   });
 
-  let handleFormChange = (e) => {
-    let { name, value, files, type } = e.target;
+  let [formImage, setImageData] = useState(null);
 
-    if (type === "file") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
-    } 
-    else {
+  let handleFormChange = (e) => {
+    let { name, value} = e.target;
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
-    }
+    
   };
 
   let handleTagChange = (e) => {
@@ -84,10 +77,13 @@ function AddListing() {
     }));
   };
 
+  let handleImageChange = (e) => {
+      setImageData(e.target.files[0]);
+  };
 
   function handleSubmit(event) {
     event.preventDefault(); 
-    createNewItem(formData.itemName, formData.price, formData.type, formData.photo, formData.tags, formData.description)
+    createNewItem(formData.itemName, formData.price, formData.type, formImage, formData.tags, formData.description)
   }
 
   return (
@@ -142,10 +138,9 @@ function AddListing() {
 
           <div>
             <label htmlFor="image"> Image: </label>
-            <input name="image" id="image" type="file" accept="image/png, image/jpeg, image/jpg" class="uploadFile" required></input>
+            <input name="image" id="image" type="file" accept="image/png, image/jpeg, image/jpg" class="uploadFile" onChange={handleImageChange} required></input>
           </div>
 
-          {formData.photo && (<div> <img src={URL.createObjectURL(formData.photo)} alt="preview"></img> </div>)}
 
           <div>
             <label for="description"> Description: </label>

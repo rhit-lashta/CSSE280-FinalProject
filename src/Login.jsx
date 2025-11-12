@@ -1,5 +1,5 @@
 import './Login.css'
-import React, { useEffect } from "react";
+import React, { useEffect, useState} from "react";
 import { login} from "./scriptMain"; 
 
 function Login() {
@@ -10,17 +10,22 @@ function Login() {
   useEffect(() => {
 
   }, []);
+
+  let [inLogin, setLogin] = useState(true);
+
+  function toggleLogin() {
+    setLogin(!inLogin)
+  };
   
 
   return (
     <> 
       <main>
         
-        <h1>Login</h1>
+        <h1><strong>Rose Marketplace</strong></h1>
           <section>
-            <h2>Please Log In</h2>
             <div id="login">
-                <h3>Login</h3>
+                {inLogin && (<h2>Login</h2>)} {!inLogin && (<h2>Create Account</h2>)}
                 <form action="/create_account" method="POST" enctype="application/x-www-form-urlencoded">
                     <p>
                         <label for="username_text">Username:</label>
@@ -30,17 +35,17 @@ function Login() {
                         <label for="password_text">Password:</label>
                         <input id="password_text" type="password" name="password"></input>
                     </p>
-                    <input id="create_button" type="submit" value="Create Account" class="hide"></input>
-                    <button id="login_button" type="button" onClick={login}>Login</button>
+                    {inLogin && (<button id="login_button" type="button" onClick={login}>Login</button>)}
+                    {!inLogin && (<button id="create_button" type="submit" value="Create Account" class="hide">Create Account</button>)}
+                    
+                    
                 </form>
             </div>
             <div>
                 <p>
-                    <a href="#" id="switch" onclick="swapBetweenLoginAndCreate()">Switch to Create Account</a>
+                    <a href="#" id="switch" onClick={toggleLogin}>Switch to Create Account</a>
                 </p>
             </div>
-
-            <img src="/images/testImage.jpg" alt = "testImage" style={{ width: '200px', margin: '10px' }}/>
         </section>
       </main>
     </>

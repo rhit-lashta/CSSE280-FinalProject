@@ -1,26 +1,54 @@
 import './Login.css'
-import React, { useEffect } from "react";
+import React, { useEffect, useState} from "react";
+import { loadItem } from "./scriptMain";
+import { useLocation } from "react-router-dom";
 //import { displayTopLevel, displayTypes, displayTags } from "./loginScript"; 
 
 function ItemPage() {
 
-  //<> is a React Fragment that doesn't include extra DOM elements
 
-  // Use Effects once at the start
+  let location = useLocation();
+  let urlPeices = location.pathname.split("/");
+  let [userData, setUser] = useState({});
+  let [itemData, setItem] = useState({});
+
+  if (urlPeices.length != 5) {
+    window.location.href = "/index.html#/listings";
+  }
+
   useEffect(() => {
-    
+
+    let fetchItem = async () => {
+      try {
+        let itemData = await loadItem(urlPeices[3], urlPeices[4]);
+        setUser(itemData[0])
+        setItem(itemData[1])
+      } catch (error) {
+        setItem({});
+      }
+    };
+  
+    fetchItem();
+
   }, []);
   
 
   return (
-    <> 
-      <main>
+    <div>
+      <h1>Test: {location.pathname}</h1>
+      <h1>{urlPeices[4]}</h1>
+      <div>Listed Price: {itemData["price"]}</div>
+      <div>Type: {itemData["type"]}</div>
+      <div> Tags: Tags not Working </div>
+      <strong> Description: {itemData["description"]}</strong>
+      <img src={itemData["image"]} alt = {itemData["image"]} style={{ width: '200px', margin: '10px' }}/>
+      <div>Sold By: {urlPeices[3]}</div>
+      <div>Email: {userData["email"]}</div>
+      <div>Phone Number: {userData["phoneNumber"]}</div>
+      <div>How to get into Contact: {userData["description"]}</div>
+    </div>
 
-        <h1>Item page</h1>
-      
-      </main>
-    </>
-  )
+  );
 }
 
 export default ItemPage

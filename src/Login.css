@@ -28,6 +28,20 @@ body {
     padding-top: 50px;
 }
 
+#itemBox {
+    background-color: grey;
+    margin-left: 0%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 400px;
+    padding: 10px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 h1 {
     font-size: 5vh;
 }

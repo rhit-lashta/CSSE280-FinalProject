@@ -13,6 +13,7 @@ from flask_jwt_extended import JWTManager
 
 from werkzeug.utils import secure_filename
 IMAGE_FOLDER = 'public/images'
+BUILD_IMAGE_FOLDER = 'dist/images'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = flask.Flask(__name__,
@@ -20,6 +21,7 @@ app = flask.Flask(__name__,
             static_folder='dist',)
 
 app.config['IMAGE_FOLDER'] = IMAGE_FOLDER
+app.config['BUILD_IMAGE_FOLDER'] = BUILD_IMAGE_FOLDER
 app.config['JWT_SECRET_KEY'] = "mysecretkey"
 jwt = JWTManager(app)
 
@@ -90,6 +92,22 @@ def get_profile():
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_profile(username)))
 
+@app.post("/profile")
+@jwt_required()
+def get_specfic_profile():
+    username = get_jwt_identity()
+    if (dataservice.verify_user_exists(username) == False):
+        return flask.Response(status="401")
+    data = request.get_json()
+    userToFind = data.get("user")
+    if (userToFind == ""):
+        userToFind = username
+
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_profile(username, userToFind)))
+
+
 
 @app.post("/items")
 @jwt_required()
@@ -114,19 +132,54 @@ def add_item():
     username = get_jwt_identity()
     if (dataservice.verify_user_exists(username) == False):
         return flask.Response(status="401")
+    ##data = request.get_json()
+
+    itemName = request.form.get("name")
+    price = float(request.form.get("price"))
+    type = request.form.get("type")
+    tags = request.form.get("tags")
+    description = request.form.get("description")
+    filepath = request.form.get("image")
+    filepath = process_image_file(request)
+
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.create_new_item(username, itemName, filepath, type, price, tags, description)))
+
+@app.patch("/item")
+@jwt_required()
+def update_item():
+    username = get_jwt_identity()
+    if (dataservice.verify_user_exists(username) == False):
+        return flask.Response(status="401")
     data = request.get_json()
 
+    oldName = data.get("oldName")
     itemName = data.get("name")
     price = float(data.get("price"))
     type = data.get("type")
     tags = data.get("tags")
     description = data.get("description")
     filepath = data.get("photo")
-    ##filepath = process_image_file(data.get("photo"))
+    
+    ##dataservice.delete_item(username, oldName, filepath, type, price, tags, description)
+    dataservice.create_new_item(username, itemName, filepath, type, price, tags, description)
+
+    return flask.Response(status="204 No Content")
+
+@app.post("/get_specific_item")
+@jwt_required()
+def get_specific_item():
+    if (dataservice.verify_user_exists(get_jwt_identity()) == False):
+        return flask.Response(status="401")
+
+    data = request.get_json()
+    user = data.get("user")
+    itemName = data.get("itemName")
 
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.create_new_item(username, itemName, filepath, type, price, tags, description)))
+                          response = json.dumps(dataservice.get_item(user, itemName)))
 
 
 
@@ -145,9 +198,9 @@ def allowed_file(filename):
 
 def process_image_file(request):
     # check if the post request has the file part
-    if 'imageData' not in request.files:
+    if 'image' not in request.files:
         return None
-    file = request.files['imageData']
+    file = request.files['image']
     # If the user does not select a file, the browser submits an
     # empty file without a filename.
     if file.filename == '':
@@ -157,7 +210,9 @@ def process_image_file(request):
         filepath = os.path.join(app.config['IMAGE_FOLDER'], filename)
         print(os.getcwd())
         file.save(filepath)
-        return filepath
+        filepathDist = os.path.join(app.config['BUILD_IMAGE_FOLDER'], filename)
+        file.save(filepathDist)
+        return "/images/" + filename
 
 
 if __name__ == "__main__":

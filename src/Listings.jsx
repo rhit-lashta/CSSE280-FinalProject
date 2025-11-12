@@ -1,5 +1,6 @@
 import './Login.css'
 import React, { useEffect, useState,} from "react";
+import {Link } from 'react-router-dom';
 import { loadItems, loadTypes, loadTags } from "./scriptMain";
 import Item from './Item.jsx';
 
@@ -120,7 +121,7 @@ function Listings() {
   return (
     <> 
       <main>
-
+      <img src="images/Solution-4.png" alt = "/images/testImage.jpg"style={{ width: '200px', margin: '10px' }}/>
       <h1>Listings</h1>
 
       <form onSubmit={handleSubmit}>
@@ -155,7 +156,7 @@ function Listings() {
 
           </div>
           )
-        }
+      }
 
       <div>
         <label for="orderValueSelector"> Sort By: </label>
@@ -191,13 +192,10 @@ function Listings() {
       {itemArray.map((item) => (
             <div>
 
-              <Item item={item[0]} price={item[1]["price"]} tags={item[1]["tag"]} image={item[1]["image"]} description={item[1]["description"]} user={item[2]}/>
+              <Item item={item[0]} type={item[1]["type"]} price={item[1]["price"]} tags={item[1]["tag"]} image={item[1]["image"]} description={item[1]["description"]} user={item[2]}/>
              
             </div>
         ))}
-
-
-        
 
       </main>
     </>
