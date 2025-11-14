@@ -105,6 +105,26 @@ def get_specfic_profile():
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_specific_profile(username, userToFind)))
 
+@app.patch("/profile")
+@jwt_required()
+def update_profile():
+    username = get_jwt_identity()
+    if (dataservice.verify_user_exists(username) == False):
+        return flask.Response(status="401")
+    
+    email = request.form.get("email")
+    phone = request.form.get("phoneNumber")
+    description = request.form.get("description")
+    filepath = process_image_file(request)
+
+    result = dataservice.update_profile(username, filepath, email, phone, description)
+
+    # This is to delete the old image file used for profile image
+    if result:
+        delete_image_file(result)
+
+    return flask.Response(status="204 No Content")
+
 
 
 @app.post("/items")

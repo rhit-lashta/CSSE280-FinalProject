@@ -1,31 +1,21 @@
 import './Login.css'
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { loadUserInfo, loadProfileInfo } from "./scriptMain";
+import { loadProfileInfo, updateProfile } from "./scriptMain";
 //import { displayTopLevel, displayTypes, displayTags } from "./loginScript"; 
 
 function Profile() {
 
-
-  let [userName, setName] = useState("");
-  let [userInfo, setInfo] = useState({});
-  let [isOwner, setOwner] = useState(false);
-
-  // [name, profileInfo{}, SameUser(bool)]
-  //<> is a React Fragment that doesn't include extra DOM elements
+  let [profileArray, setProfileArray] = useState([]);
 
   // Use Effects once at the start
   useEffect(() => {
     let fetchProfile = async () => {
       try {
         let profileData = await loadProfileInfo("");
-        console.log(profileData[0])
-        console.log(profileData[2])
-        console.log(profileData[1])
-        setName(profileData[0])
-        setInfo(profileData[1])
-        setOwner(profileData[2])
-      } catch (error) {
+        setProfileArray(profileData)
+      } catch (err) {
+        console.error(err);
         setProfileArray([]);
       }
     };
@@ -33,10 +23,52 @@ function Profile() {
     fetchProfile();
   }, []);
 
-  // Safely extract the object from the array; default to an empty object so
-  // property access won't throw while the fetch is in-flight.
-  let userInformation = userName || {};
-  console.log("User Information:", userInformation);
+  let userName = profileArray[0] || "";
+  let userInformation = profileArray[1] || {};
+  let isUser = profileArray[2] || false;
+
+  let [inEditMode, setEdit] = useState(false);
+  let [newEmail, setNewEmail] = useState("");
+  let [newPhone, setNewPhone] = useState("");
+  let [newDescription, setNewDescription] = useState("");
+  let [newImage, setNewImage] = useState(null);
+  // console.log("User Name:", userName);
+  // console.log("User Information:", userInformation);
+  // console.log("Is User:", isUser);
+
+  function enterEditMode() {
+    setNewEmail(userInformation.email || "");
+    setNewPhone(userInformation.phoneNumber || "");
+    setNewDescription(userInformation.description || "");
+    setNewImage(null);
+    setEdit(true);
+  }
+
+  function exitEditMode() {
+    setEdit(false);
+    setNewImage(null);
+  }
+
+  let handleImageChange = (e) => {
+    setNewImage(e.target.files[0]);
+  };
+
+  let handleEmailChange = (e) => setNewEmail(e.target.value);
+  let handlePhoneChange = (e) => setNewPhone(e.target.value);
+  let handleDescriptionChange = (e) => setNewDescription(e.target.value);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    try {
+      await updateProfile(newEmail, newPhone, newDescription, newImage);
+      // refresh profile data
+      let newProfileInfo = await loadProfileInfo("");
+      setProfileArray(newProfileInfo || []);
+    } catch (err) {
+      console.error(err);
+    }
+    setEdit(false);
+  }
 
   return (
     <> 
@@ -46,14 +78,57 @@ function Profile() {
           <div class = "profileHeader">
             <img className="profileImage" src={userInformation.profileImage || "/images/testImage.jpg"} alt="Profile"/>
             <div>
-              <h3>{userName || "Not provided"}</h3>
-              <Link to="/profile/yourListings">{userInformation.username || "Not provided"}'s Listings</Link>
+              {!inEditMode && (
+                <>
+                  <h3>{userName || "Username not provided/found"}</h3>
+                  <Link to="/profile/yourListings">{userName || "Placeholder"}'s Listings</Link>
+                </>
+              )}
+              {inEditMode && (
+                <>
+                  <h3>{userName || "Username not provided/found"}</h3>
+                </>
+              )}
+              {inEditMode && (
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
+                  <div>
+                    <label htmlFor="email">Email:</label>
+                    <input id="email" name="email" type="email" value={newEmail} onChange={handleEmailChange} />
+                  </div>
+                  <div>
+                    <label htmlFor="phone">Phone:</label>
+                    <input id="phone" name="phone" type="tel" value={newPhone} onChange={handlePhoneChange} />
+                  </div>
+                  <div>
+                    <label htmlFor="profileImage">Profile Image:</label>
+                    <input id="profileImage" name="profileImage" type="file" accept="image/*" onChange={handleImageChange} />
+                  </div>
+                  <div>
+                    <label htmlFor="description">Description:</label>
+                    <textarea id="description" rows="6" cols="40" value={newDescription} onChange={handleDescriptionChange} />
+                  </div>
+                  <div>
+                    <button type="submit">Save Changes</button>
+                    <button type="button" onClick={exitEditMode}>Discard Changes</button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
-          <h3>Contact Information</h3>
-          <p>Email: {userInfo.email  || "Not provided"}</p>
-          <p>Phone: {userInfo.phoneNumber || "Not provided"}</p>
-          <p>Contact Description: {userInfo.contactDescription || "No contact description provided."}</p>
+          {!inEditMode && (
+            <>
+              <h3>Contact Information</h3>
+              <p>Email: {userInformation.email || "Email not provided/found"}</p>
+              <p>Phone: {userInformation.phoneNumber || "Phone Number not provided/found"}</p>
+              <p>Contact Description: {userInformation.description || "No contact description provided."}</p>
+            </>
+          )}
+          {/* Move Edit Profile button to bottom of profile box */}
+          {isUser && !inEditMode && (
+            <div>
+              <button onClick={enterEditMode}>Edit Profile</button>
+            </div>
+          )}
         </div>
       </main>
     </>

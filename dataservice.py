@@ -280,6 +280,34 @@ def get_specific_profile(currentUser, username):
   
     return [username, userData, sameUser]
 
+
+def update_profile(currentUsername, photo, email, phoneNumber, description):
+    db = get_db()
+    users = db.get(users_key)
+
+    if currentUsername not in users:
+        return ""
+
+    # remember old profile image path for possible deletion
+    old_image = users[currentUsername][info_key].get(profile_key, "") or ""
+    delete_path = ""
+
+    userInfo = users[currentUsername][info_key]
+    if email is not None:
+        userInfo[email_key] = email
+    if phoneNumber is not None:
+        userInfo[phone_key] = phoneNumber
+    if description is not None:
+        userInfo[description_key] = description
+    if photo is not None:
+        if old_image and (old_image != photo):
+            fixed_path = old_image.lstrip('/')
+            delete_path = os.path.join('dist', fixed_path)
+        userInfo[profile_key] = photo
+
+    db.save()
+    return delete_path
+
 def create_new_item(username, itemName, photo, type, price, tags, description):
     db = get_db()
     users = db.get(users_key)

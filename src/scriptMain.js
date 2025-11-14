@@ -330,7 +330,8 @@ export async function loadUserInfo() {
 
         return userArray;
     }
-    catch (e) {
+    catch (err) {
+        console.error(err);
         return null;
     }
 
@@ -364,6 +365,38 @@ export async function updateItem(oldName, itemName, price, type, photo, tags, de
             throw new Error(`Response status: ${response.status}`);
         }
         return;
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+
+}
+
+export async function updateProfile(email, phoneNumber, description, photo) {
+
+    let formData = new FormData();
+    formData.append("email", email);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("description", description);
+    if (photo != null) {
+        formData.append("image", photo, photo.name);
+    }
+
+    let options = {
+        method: "PATCH",
+        body: formData,
+    };
+    addAuthHeader(options)
+
+    try {
+        let response = await fetch("/profile", options)
+        if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
+            throw new Error(`Response status: ${response.status}`);
+        }
+        return await response.json();
     }
     catch (ex) {
         console.error(ex);
