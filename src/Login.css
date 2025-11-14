@@ -162,12 +162,6 @@ li:hover {
     padding-bottom: 20px;
 }
 
-.itemImage {
-    width: '2px';
-    margin: '10px';
-    float: "right";
-}
-
 .choiceWide {
     width: 500px;
     padding: 10px;
@@ -229,7 +223,11 @@ li:hover {
         padding-top: 20px;
         padding-bottom: 20px;
     }
+}
 
+.itemImage {
+    float: "right";
+    max-width: 200px;
 }
 
 
@@ -263,12 +261,6 @@ li:hover {
     background-color: var(--secondItemColor);
 }
 
-.itemImage {
-    margin-left: auto; 
-    max-width: 150px; 
-    float: "right";
-}
-
 #addItemButton {
     font-size: 30px;
     width: 60px;
@@ -281,4 +273,3 @@ li:hover {
     bottom: 20px;
     right: 20px;
 }
-
