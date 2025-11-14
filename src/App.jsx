@@ -20,12 +20,11 @@ function App() {
     return (
       <>
         <nav id="mainBanner">
-          <img src="/images/testImage.jpg" alt = "testImage" style={{ height: '60px', margin: '10px' }}/>
           <Link to="/">Login</Link>
           <Link to="/listings">Listings</Link>
           <Link to="/profile">Profile</Link>
-          <Link to="/yourListings">Your Items</Link>
-          <Link to="/yourListings/addListing">Add Item</Link>
+          <Link to="/userListings">Your Items</Link>
+          <Link to="/addListing">Add Item</Link>
           <Link to="/priceHistory">Price History</Link>
         </nav>
   
@@ -35,8 +34,8 @@ function App() {
           <Route path="/listings" element={<Listings />} />
           <Route path="/listings/itemPage/*" element={<ItemPage />} />
           <Route path="/profile/*" element={<Profile />} />
-          <Route path="/yourListings" element={<YourListings />} />
-          <Route path="/yourListings/addListing" element={<AddListing />} />
+          <Route path="/userListings/*" element={<YourListings />} />
+          <Route path="/addListing" element={<AddListing />} />
           <Route path="/priceHistory" element={<PriceHistory />} />
         </Routes>
         </nav>

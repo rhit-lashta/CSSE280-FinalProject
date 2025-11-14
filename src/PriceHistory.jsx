@@ -68,8 +68,8 @@ function PriceHistory() {
       <main>
 
         <h1>Price History</h1>
+
         <div className="centerOptions">
-        <div>
             <select id="typeSelector" name="type" className="choiceWide" value={currentType} onChange={handleTypeChange} required>
               <option value="">Select a Type</option>
                 {typeArray.map((typeOption) => (
@@ -81,9 +81,9 @@ function PriceHistory() {
         </div>
 
         {currentType != "" && (
-          <div>
+          <div className="centerOptions">
             <label for="timeSelector"> Choose a Timeframe: </label>
-            <select id="timeSelector" name="type" className="dateSelector" value={currentTime} onChange={handleTimeChange} required>
+            <select id="timeSelector" name="type" className="choice" value={currentTime} onChange={handleTimeChange} required>
               <option value="">--Select a Time Range--</option>
                 {dateOptionsArray.map((option) => (
                   <option key={option[0]} value={option[1]}>
@@ -103,24 +103,23 @@ function PriceHistory() {
             {
             id: 'Dates',
               data: dates,
-              labelString: 'Dates Sold'
+              label: 'Dates Sold'
             },
             
             ]}
             series={[
             {
               data: dateSales,
-              labelString: 'Average Price of Item'
+              label: 'Average Sale Value of Item Type'
             },
             ]}
             height={300}
             />
-            <div>Current value: ${currentAvgPrice}</div>
+            <div className="centerOptions">Current value: ${currentAvgPrice}</div>
           </div>
 
           )
         }
-      </div>
       </main>
     </>
   )

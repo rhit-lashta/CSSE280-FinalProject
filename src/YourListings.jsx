@@ -1,7 +1,8 @@
 import './Login.css'
 import React, { useEffect, useState} from "react";
-import { loadTypes, loadTags, loadProfileInfo, loadUserItems} from "./scriptMain";
+import { loadTypes, loadTags, loadProfileInfo, loadTargetUserItems} from "./scriptMain";
 import OwnedItem from './OwnedItem.jsx';
+import { useLocation } from 'react-router-dom';
 
 function YourListings() {
 
@@ -9,6 +10,17 @@ function YourListings() {
   let [tagArray, setTagArray] = useState([]);
   let [userData, setUser] = useState([]);
   let [items, setItem] = useState([]);
+
+  let [profileFound, setFound] = useState(null);
+
+  let location = useLocation();
+  let urlPeices = location.pathname.split("/");
+
+  let targetUser = "";
+  if (urlPeices.length == 3) {
+    console.log(urlPeices[2])
+    targetUser = urlPeices[2];
+  }
 
   useEffect(() => {
 
@@ -43,8 +55,15 @@ function YourListings() {
     };
     let fetchUser = async () => {
       try {
-        let profileData = await loadProfileInfo("");
-        setUser(profileData)
+        let profileData = await loadProfileInfo(targetUser);
+        if (profileData.length == 3) {
+          setUser(profileData)
+          setFound(true)
+          fetchItem();
+        }
+        else {
+          setFound(false)
+        }
       } catch (error) {
         console.log(error)
         setUser([])
@@ -54,7 +73,7 @@ function YourListings() {
     
     let fetchItem = async () => {
       try {
-        let itemData = await loadUserItems();
+        let itemData = await loadTargetUserItems(targetUser);
         setItem(itemData)
         
       } catch (error) {
@@ -66,7 +85,6 @@ function YourListings() {
     fetchTypes();
     fetchTags();
     fetchUser();
-    fetchItem();
   }, []);
   
 
@@ -74,14 +92,23 @@ function YourListings() {
     <> 
       <main>
 
-        <h1>Your Listings</h1>
+        {profileFound == true && (
+        <div>  
+        
+        <h1>{userData[0]} Listings</h1>
 
         {items.map((item) => (
             <div>
-              <OwnedItem item={item[0]} type={item[1]["type"]} price={item[1]["price"]} tags={item[1]["tags"]} image={item[1]["image"]} description={item[1]["description"]} user={userData[0]} allTypes={typeArray} allTags={tagArray}/>
+              <OwnedItem item={item[0]} type={item[1]["type"]} price={item[1]["price"]} tags={item[1]["tags"]} image={item[1]["image"]} description={item[1]["description"]} user={userData[0]} isOwner={userData[2]} allTypes={typeArray} allTags={tagArray}/>
              
             </div>
         ))}
+        </div>
+        )}
+
+        {profileFound == false && (
+            <h1>The user <i>{targetUser}</i> could not be found</h1>
+        )}
       
       </main>
     </>

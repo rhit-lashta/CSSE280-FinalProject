@@ -20,10 +20,9 @@ function AddListing() {
         setTypeArray(types);
 
       } catch (error) {
+        console.log(error)
         setTypeArray([]);
-      } finally {
-        //setLoading(false);
-      }
+      } 
     };
 
     let fetchTags = async () => {
@@ -35,13 +34,10 @@ function AddListing() {
           tags.push(tagsData[i][0]);
         }
         setTagArray(tags);
-        //setError(null);
-      } catch (err) {
-        //setError(err.message);
+      } catch (error) {
+        console.log(error)
         setTagArray([]);
-      } finally {
-        //setLoading(false);
-      }
+      } 
     };
 
     fetchTypes();

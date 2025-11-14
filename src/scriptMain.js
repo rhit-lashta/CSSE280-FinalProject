@@ -272,6 +272,35 @@ export async function loadUserItems() {
     }
 }
 
+export async function loadTargetUserItems(user) {
+    let data = {
+        "user":user,
+    }
+    let options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }
+    addAuthHeader(options)
+
+    try {
+        let response = await fetch("/userItems", options)
+        if (!response.ok) {
+            if(handle401(response)) {
+                return;
+            }
+            throw new Error(`Response status: ${response.status}`);
+        }
+        itemsArray = await response.json();
+        return itemsArray;
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+}
+
 export async function createNewItem(itemName, price, type, photo, tags, description) {
 
     let formData = new FormData();
@@ -299,7 +328,7 @@ export async function createNewItem(itemName, price, type, photo, tags, descript
         let success = await response.json();
 
         if (success) {
-            window.location.href = "/index.html/#/yourListings";
+            window.location.href = "/index.html/#/userListings";
         }
 
         

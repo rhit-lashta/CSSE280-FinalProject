@@ -6,7 +6,7 @@ import { loadProfileInfo, updateProfile } from "./scriptMain";
 function Profile() {
 
   let [profileArray, setProfileArray] = useState([]);
-  let [profileFound, setFound] = useState(false);
+  let [profileFound, setFound] = useState(null);
 
   let location = useLocation();
   let urlPeices = location.pathname.split("/");
@@ -27,6 +27,9 @@ function Profile() {
           setFound(true)
           setProfileArray(profileData)
         }
+        else {
+          setFound(false)
+        }
 
       } catch (err) {
         console.error(err);
@@ -46,9 +49,8 @@ function Profile() {
   let [newPhone, setNewPhone] = useState("");
   let [newDescription, setNewDescription] = useState("");
   let [newImage, setNewImage] = useState(null);
-  // console.log("User Name:", userName);
-  // console.log("User Information:", userInformation);
-  // console.log("Is User:", isUser);
+
+  let itemsLink = "/userListings/" + userName;
 
   function enterEditMode() {
     setNewEmail(userInformation.email || "");
@@ -85,9 +87,9 @@ function Profile() {
   }
 
   return (
-    <> 
-    {profileFound && (
-      <main>
+    <main> 
+    {profileFound == true && (
+      <div>
       
         <h1>Profile</h1>
         <div class = "profileBox">
@@ -146,9 +148,17 @@ function Profile() {
             </div>
           )}
         </div>
-      </main>
+        <div className="centerOptions"><Link to={itemsLink}>Browse Items From this Seller</Link></div>
+        
+      </div>
       )}
-    </>
+
+      {profileFound == false && (
+      <p>
+        <h1>The user <i>{targetUser}</i> could not be found</h1>
+      </p>
+    )}
+    </main>
   )
 }
 

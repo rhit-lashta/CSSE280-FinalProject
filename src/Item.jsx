@@ -14,7 +14,7 @@ function Item({item, type, price, tags, image, description, user}) {
     
     return (
       <div>
-        <img src={image} alt = {image} class = "itemImage" style={{ width: '200px', margin: '10px', float: "right"}}/>
+        <img src={image} alt = {image} class = "itemImage" width = "500px" style={{float: "right"}}/>
         <h2><Link to={link}>{item}</Link></h2>
         <div>Listed Price: {price}</div>
         <div>Type: {type}</div>
@@ -27,8 +27,8 @@ function Item({item, type, price, tags, image, description, user}) {
         </p>
 
         </div>
-        <strong> Description: {description}</strong>
-        <div>Sold By: <Link to={userLink}>{user}</Link></div>
+        <p class="descriptionBox"><div><strong> Item Description </strong></div>{description}</p>
+        <div>Sold By: <Link to={userLink} class="bigLink"><strong>{user}</strong></Link></div>
       </div>
     );
 };

@@ -80,11 +80,25 @@ def get_user_items():
                           headers={"Content-Type": "application/json"},
                           response = json.dumps(dataservice.get_user_items_list(username)))
 
+@app.post("/userItems")
+@jwt_required()
+def get_target_user_items():
+    username = get_jwt_identity()
+    if (dataservice.verify_user_exists(username) == False):
+        return flask.Response(status="401")
+    data = request.get_json()
+    userToFind = data.get("user")
+    if (userToFind == ""):
+        userToFind = username
+    
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.get_user_items_list(userToFind)))
+
 @app.get("/profile")
 @jwt_required()
 def get_profile():
     username = get_jwt_identity()
-
     if (dataservice.verify_user_exists(username) == False):
         return flask.Response(status="401")
     return flask.Response(status="200 OK",

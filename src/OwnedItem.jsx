@@ -3,7 +3,7 @@ import React, { useEffect, useState,} from "react";
 import {Link } from 'react-router-dom'; 
 import { updateItem, removeItem } from "./scriptMain";
 
-function OwnedItem({item, type, price, tags, image, description, user, allTypes, allTags}) { 
+function OwnedItem({item, type, price, tags, image, description, user, isOwner, allTypes, allTags}) { 
 
   let [inEditMode, setEdit] = useState(false);
   let [inRemoveMode, setRemove] = useState(false);
@@ -16,6 +16,7 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
   let [currentDescription, setCurrentDescription] = useState(description);
 
   let [link, setLink] = useState("/listings/itemPage/" + user + "/" + item);
+  let userLink = "/profile/" + user;
 
   let [newItem, setNewItem] = useState(item);
   let [newType, setNewType] = useState(type);
@@ -161,10 +162,14 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
             ))}
             </p>
             </div>
-            <strong> Description: {currentDescription}</strong>
-            <div>Sold By: {user}</div>
+            <p class="descriptionBox"><div><strong> Item Description </strong></div>{description}</p>
+            <div>Sold By: <Link to={userLink} class="bigLink"><strong>{user}</strong></Link></div>
+            
+            {isOwner && (<div>
             <button onClick={enterEditMode}>Edit</button>
             <button onClick={toggleRemoveMode}>Remove</button>
+            </div>
+            )}
 
           </div>
           )

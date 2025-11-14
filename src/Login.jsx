@@ -29,11 +29,11 @@ function Login() {
                 <form action="/create_account" method="POST" enctype="application/x-www-form-urlencoded">
                     <p>
                         <label for="username_text">Username:</label>
-                        <input id="username_text" type="text" name="username"></input>
+                        <input id="username_text" type="text" name="username" required></input>
                     </p>
                     <p>
                         <label for="password_text">Password:</label>
-                        <input id="password_text" type="password" name="password"></input>
+                        <input id="password_text" type="password" name="password" required></input>
                     </p>
                     {inLogin && (<button id="login_button" type="button" onClick={login}>Login</button>)}
                     {!inLogin && (<button id="create_button" type="submit" value="Create Account" class="hide">Create Account</button>)}
