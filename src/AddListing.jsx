@@ -1,6 +1,6 @@
 import './Login.css'
 import React, { useEffect, useState } from "react";
-import { loadTypes, loadTags, createNewItem, checkNoSpecial } from "./scriptMain"; 
+import { loadTypes, loadTags, createNewItem, checkNoSpecialOrSpaces} from "./scriptMain"; 
 
 function AddListing() {
   
@@ -98,12 +98,12 @@ function AddListing() {
 
   function handleSubmit(event) {
     event.preventDefault(); 
-    if (checkNoSpecial(formData.itemName)) {
+    if (checkNoSpecialOrSpaces(formData.itemName)) {
       setError("")
       createNewItem(formData.itemName, formData.price, formData.type, formImage, tags, formData.description)
     }
     else {
-      setError("Item Name can only have letters a-z and A-Z")
+      setError("Item Name can only have numbers and letters with no spaces")
     }
   }
 

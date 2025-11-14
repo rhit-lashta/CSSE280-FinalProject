@@ -223,6 +223,9 @@ li:hover {
         padding-top: 20px;
         padding-bottom: 20px;
     }
+    textarea {
+        width: 150px;
+    }
 }
 
 .itemImage {

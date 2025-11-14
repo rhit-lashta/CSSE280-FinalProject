@@ -5,6 +5,7 @@ import os
 from flask import jsonify
 from flask import request
 
+
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import verify_jwt_in_request
 from flask_jwt_extended import get_jwt_identity
@@ -29,9 +30,10 @@ def create_account():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
-    if not dataservice.add_user(username, password):
-        return flask.redirect("/index.html")
-    return flask.redirect("/index.html")
+
+    return flask.Response(status="200 OK",
+                          headers={"Content-Type": "application/json"},
+                          response = json.dumps(dataservice.add_user(username, password)))
 
 
 @app.post("/login")
@@ -166,7 +168,6 @@ def add_item():
     username = get_jwt_identity()
     if (dataservice.verify_user_exists(username) == False):
         return flask.Response(status="401")
-    ##data = request.get_json()
 
     itemName = request.form.get("name")
     price = float(request.form.get("price"))
@@ -189,7 +190,6 @@ def update_item():
     username = get_jwt_identity()
     if (dataservice.verify_user_exists(username) == False):
         return flask.Response(status="401")
-    ##data = request.get_json()
 
     oldName = request.form.get("oldName")
     itemName = request.form.get("name")
