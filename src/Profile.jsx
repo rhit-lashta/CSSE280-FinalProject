@@ -141,7 +141,6 @@ function Profile() {
               <p>Contact Description: {userInformation.description || "No contact description provided."}</p>
             </>
           )}
-          {/* Move Edit Profile button to bottom of profile box */}
           {isUser && !inEditMode && (
             <div>
               <button onClick={enterEditMode}>Edit Profile</button>
