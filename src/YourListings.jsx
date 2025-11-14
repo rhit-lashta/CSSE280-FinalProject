@@ -2,7 +2,7 @@ import './Login.css'
 import React, { useEffect, useState} from "react";
 import { loadTypes, loadTags, loadProfileInfo, loadTargetUserItems} from "./scriptMain";
 import OwnedItem from './OwnedItem.jsx';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function YourListings() {
 
@@ -95,7 +95,7 @@ function YourListings() {
         {profileFound == true && (
         <div>  
         
-        <h1>{userData[0]} Listings</h1>
+        <h1>{userData[0]}'s Listings</h1>
 
         {items.map((item) => (
             <div>
@@ -109,7 +109,10 @@ function YourListings() {
         {profileFound == false && (
             <h1>The user <i>{targetUser}</i> could not be found</h1>
         )}
-      
+
+        {profileFound == true && userData[2] && (
+          <Link to="/addListing"><button id="addItemButton">+</button></Link>
+        )}
       </main>
     </>
   )

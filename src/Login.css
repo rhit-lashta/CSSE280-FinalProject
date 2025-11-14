@@ -269,3 +269,16 @@ li:hover {
     float: "right";
 }
 
+#addItemButton {
+    font-size: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: lightgray;
+    color: black;
+    border: 1px solid black;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
