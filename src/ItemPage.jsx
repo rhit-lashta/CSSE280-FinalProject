@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 
 function ItemPage() {
 
-
   let location = useLocation();
   let urlPeices = location.pathname.split("/");
   let [userData, setUser] = useState({});
@@ -24,7 +23,6 @@ function ItemPage() {
         setUser(itemData[0])
         setItem(itemData[1])
 
-        console.log(itemData["tags"])
       } catch (error) {
         console.log(error)
         setItem({});
@@ -40,7 +38,6 @@ function ItemPage() {
 
   return (
     <div>
-      <h1>Test: {location.pathname}</h1>
       <h1>{urlPeices[4]}</h1>
       <div>Listed Price: {itemData["price"]}</div>
       <div>Type: {itemData["type"]}</div>

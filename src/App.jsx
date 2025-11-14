@@ -24,8 +24,8 @@ function App() {
           <Link to="/">Login</Link>
           <Link to="/listings">Listings</Link>
           <Link to="/profile">Profile</Link>
-          <Link to="/profile/yourListings">Your Items</Link>
-          <Link to="/profile/yourListings/addListing">Add Item</Link>
+          <Link to="/yourListings">Your Items</Link>
+          <Link to="/yourListings/addListing">Add Item</Link>
           <Link to="/priceHistory">Price History</Link>
         </nav>
   
@@ -34,9 +34,9 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/listings" element={<Listings />} />
           <Route path="/listings/itemPage/*" element={<ItemPage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/yourListings" element={<YourListings />} />
-          <Route path="/profile/yourListings/addListing" element={<AddListing />} />
+          <Route path="/profile/*" element={<Profile />} />
+          <Route path="/yourListings" element={<YourListings />} />
+          <Route path="/yourListings/addListing" element={<AddListing />} />
           <Route path="/priceHistory" element={<PriceHistory />} />
         </Routes>
         </nav>

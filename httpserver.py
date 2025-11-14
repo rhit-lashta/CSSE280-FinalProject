@@ -84,6 +84,7 @@ def get_user_items():
 @jwt_required()
 def get_profile():
     username = get_jwt_identity()
+
     if (dataservice.verify_user_exists(username) == False):
         return flask.Response(status="401")
     return flask.Response(status="200 OK",

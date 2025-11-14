@@ -1,19 +1,33 @@
 import './Login.css'
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { loadProfileInfo, updateProfile } from "./scriptMain";
-//import { displayTopLevel, displayTypes, displayTags } from "./loginScript"; 
 
 function Profile() {
 
   let [profileArray, setProfileArray] = useState([]);
+  let [profileFound, setFound] = useState(false);
+
+  let location = useLocation();
+  let urlPeices = location.pathname.split("/");
+
+  let targetUser = "";
+  if (urlPeices.length == 3) {
+    console.log(urlPeices[2])
+    targetUser = urlPeices[2];
+  }
 
   // Use Effects once at the start
   useEffect(() => {
     let fetchProfile = async () => {
       try {
-        let profileData = await loadProfileInfo("");
-        setProfileArray(profileData)
+        console.log(targetUser)
+        let profileData = await loadProfileInfo(targetUser);
+        if (profileData.length == 3) {
+          setFound(true)
+          setProfileArray(profileData)
+        }
+
       } catch (err) {
         console.error(err);
         setProfileArray([]);
@@ -72,7 +86,9 @@ function Profile() {
 
   return (
     <> 
+    {profileFound && (
       <main>
+      
         <h1>Profile</h1>
         <div class = "profileBox">
           <div class = "profileHeader">
@@ -131,6 +147,7 @@ function Profile() {
           )}
         </div>
       </main>
+      )}
     </>
   )
 }

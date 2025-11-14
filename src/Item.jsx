@@ -6,6 +6,8 @@ function Item({item, type, price, tags, image, description, user}) {
 
   let link = "/listings/itemPage/" + user + "/" + item;
 
+  let userLink = "/profile/" + user;
+
   useEffect(() => {
     console.log(tags)
   })
@@ -26,7 +28,7 @@ function Item({item, type, price, tags, image, description, user}) {
 
         </div>
         <strong> Description: {description}</strong>
-        <div>Sold By: {user}</div>
+        <div>Sold By: <Link to={userLink}>{user}</Link></div>
       </div>
     );
 };

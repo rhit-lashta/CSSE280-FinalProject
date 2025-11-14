@@ -274,11 +274,15 @@ def get_profile(username):
 def get_specific_profile(currentUser, username):
     db = get_db()
     users = db.get(users_key)
-    userData = users[username][info_key]
 
-    sameUser = (currentUser == username)
-  
-    return [username, userData, sameUser]
+    if (username in users):
+        userData = users[username][info_key]
+        sameUser = (currentUser == username)
+        return [username, userData, sameUser]
+    
+    return []
+
+    
 
 
 def update_profile(currentUsername, photo, email, phoneNumber, description):

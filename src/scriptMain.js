@@ -241,8 +241,8 @@ export async function loadProfileInfo(user) {
             }
             throw new Error(`Response status: ${response.status}`);
         }
-        itemsArray = await response.json();
-        return itemsArray;
+        let profileInfo = await response.json();
+        return profileInfo;
     }
     catch (ex) {
         console.error(ex);
@@ -299,7 +299,7 @@ export async function createNewItem(itemName, price, type, photo, tags, descript
         let success = await response.json();
 
         if (success) {
-            window.location.href = "/index.html/#/profile/yourListings";
+            window.location.href = "/index.html/#/yourListings";
         }
 
         
