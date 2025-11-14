@@ -12,7 +12,6 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
 from werkzeug.utils import secure_filename
-IMAGE_FOLDER = 'public/images'
 BUILD_IMAGE_FOLDER = 'dist/images'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -20,7 +19,6 @@ app = flask.Flask(__name__,
             static_url_path='',
             static_folder='dist',)
 
-app.config['IMAGE_FOLDER'] = IMAGE_FOLDER
 app.config['BUILD_IMAGE_FOLDER'] = BUILD_IMAGE_FOLDER
 app.config['JWT_SECRET_KEY'] = "mysecretkey"
 jwt = JWTManager(app)
@@ -105,7 +103,7 @@ def get_specfic_profile():
 
     return flask.Response(status="200 OK",
                           headers={"Content-Type": "application/json"},
-                          response = json.dumps(dataservice.get_profile(username, userToFind)))
+                          response = json.dumps(dataservice.get_specific_profile(username, userToFind)))
 
 
 
@@ -138,8 +136,11 @@ def add_item():
     price = float(request.form.get("price"))
     type = request.form.get("type")
     tags = request.form.get("tags")
+    tags = tags.split(',')
+    if (len(tags) == 1 and tags[0] == ""):
+        tags = []
+    
     description = request.form.get("description")
-    filepath = request.form.get("image")
     filepath = process_image_file(request)
 
     return flask.Response(status="200 OK",
@@ -152,18 +153,37 @@ def update_item():
     username = get_jwt_identity()
     if (dataservice.verify_user_exists(username) == False):
         return flask.Response(status="401")
+    ##data = request.get_json()
+
+    oldName = request.form.get("oldName")
+    itemName = request.form.get("name")
+    price = float(request.form.get("price"))
+    type = request.form.get("type")
+    tags = request.form.get("tags")
+    tags = tags.split(',')
+    if (len(tags) == 1 and tags[0] == ""):
+        tags = []
+    description = request.form.get("description")
+    filepath = process_image_file(request)
+    
+    filepath = dataservice.update_item(username, oldName, itemName, filepath, type, price, tags, description)
+    delete_image_file(filepath)
+
+    return flask.Response(status="204 No Content")
+
+@app.delete("/item")
+@jwt_required()
+def delete_item():
+    username = get_jwt_identity()
+    if (dataservice.verify_user_exists(username) == False):
+        return flask.Response(status="401")
     data = request.get_json()
 
-    oldName = data.get("oldName")
-    itemName = data.get("name")
-    price = float(data.get("price"))
-    type = data.get("type")
-    tags = data.get("tags")
-    description = data.get("description")
-    filepath = data.get("photo")
+    itemName = data.get("itemName")
+    price = int(data.get("price"))
     
-    ##dataservice.delete_item(username, oldName, filepath, type, price, tags, description)
-    dataservice.create_new_item(username, itemName, filepath, type, price, tags, description)
+    filepath = dataservice.remove_item(username, itemName, price)
+    delete_image_file(filepath)
 
     return flask.Response(status="204 No Content")
 
@@ -207,13 +227,22 @@ def process_image_file(request):
         return None
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['IMAGE_FOLDER'], filename)
-        print(os.getcwd())
-        file.save(filepath)
         filepathDist = os.path.join(app.config['BUILD_IMAGE_FOLDER'], filename)
         file.save(filepathDist)
         return "/images/" + filename
 
+def delete_image_file(filePath):
+
+    if filePath == "":
+        return ""
+
+    if os.path.exists(filePath):
+        try:
+            os.remove(filePath)
+        except OSError as e:
+            print(f"Error deleting image: {e}")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
+
+

@@ -23,11 +23,10 @@ function App() {
           <img src="/images/testImage.jpg" alt = "testImage" style={{ height: '60px', margin: '10px' }}/>
           <Link to="/">Login</Link>
           <Link to="/listings">Listings</Link>
-          <Link to="/listings/itemPage">Item Page</Link>
           <Link to="/profile">Profile</Link>
-          <Link to="/profile/yourListings">Listings</Link>
-          <Link to="/profile/yourListings/addListing">AddListing</Link>
-          <Link to="/priceHistory">PriceHistory</Link>
+          <Link to="/profile/yourListings">Your Items</Link>
+          <Link to="/profile/yourListings/addListing">Add Item</Link>
+          <Link to="/priceHistory">Price History</Link>
         </nav>
   
         <nav id="main">

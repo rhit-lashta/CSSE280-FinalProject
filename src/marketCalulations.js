@@ -69,7 +69,7 @@ function getPriceWidgetMonths(items, timeSpan, day, month, year) {
     for (let item in items) {
         
         let itemData = items[item]
-        let itemDate = itemData["dataMain"]
+        let itemDate = itemData["date"]
         let dateParts = itemDate.split("/");
         // [Month, Day, Year] //
         if ((dateParts[2] > oldestYear) ||
@@ -167,7 +167,7 @@ function getPriceWidgetDays(items, timeSpan, day, month, year) {
     for (let item in items) {
         
         let itemData = items[item]
-        let itemDate = itemData["dataMain"]
+        let itemDate = itemData["date"]
         let dateParts = itemDate.split("/");
         for (let i = 0; i < dateParts.length; i++) {
             dateParts[i] = parseInt(dateParts[i])

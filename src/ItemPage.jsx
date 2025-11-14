@@ -10,7 +10,7 @@ function ItemPage() {
   let location = useLocation();
   let urlPeices = location.pathname.split("/");
   let [userData, setUser] = useState({});
-  let [itemData, setItem] = useState({});
+  let [itemData, setItem] = useState({"tags":[]});
 
   if (urlPeices.length != 5) {
     window.location.href = "/index.html#/listings";
@@ -23,12 +23,17 @@ function ItemPage() {
         let itemData = await loadItem(urlPeices[3], urlPeices[4]);
         setUser(itemData[0])
         setItem(itemData[1])
+
+        console.log(itemData["tags"])
       } catch (error) {
+        console.log(error)
         setItem({});
       }
     };
   
     fetchItem();
+
+    
 
   }, []);
   
@@ -39,9 +44,14 @@ function ItemPage() {
       <h1>{urlPeices[4]}</h1>
       <div>Listed Price: {itemData["price"]}</div>
       <div>Type: {itemData["type"]}</div>
-      <div> Tags: Tags not Working </div>
+      Tags: 
+        <p>
+        {(itemData["tags"]).map((tag) => (
+          <span class="displayTag">{tag}</span>
+        ))}
+        </p>
       <strong> Description: {itemData["description"]}</strong>
-      <img src={itemData["image"]} alt = {itemData["image"]} style={{ width: '200px', margin: '10px' }}/>
+      <img src={itemData["image"]} alt = {itemData["image"]} class = "itemImage" style={{ width: '500px', margin: '10px', float: "right"}}/>
       <div>Sold By: {urlPeices[3]}</div>
       <div>Email: {userData["email"]}</div>
       <div>Phone Number: {userData["phoneNumber"]}</div>

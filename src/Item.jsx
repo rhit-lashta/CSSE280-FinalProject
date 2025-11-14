@@ -1,27 +1,31 @@
 import './Login.css'
-import React, { useEffect, useState,} from "react";
+import React, { useEffect} from "react";
 import {Link } from 'react-router-dom';
 
 function Item({item, type, price, tags, image, description, user}) { 
 
   let link = "/listings/itemPage/" + user + "/" + item;
+
+  useEffect(() => {
+    console.log(tags)
+  })
     
     return (
       <div>
-        <h1><Link to={link}>{item}</Link></h1>
+        <img src={image} alt = {image} class = "itemImage" style={{ width: '200px', margin: '10px', float: "right"}}/>
+        <h2><Link to={link}>{item}</Link></h2>
         <div>Listed Price: {price}</div>
         <div>Type: {type}</div>
         <div>
         Tags: 
-        {tags && tags.map((tag, index) => (
-        //    {tags[index]}
-        <p></p>
+        <p>
+        {tags.length > 0 && tags.map((tag) => (
+          <span class="displayTag">{tag}</span>
         ))}
-        Tags not Working
+        </p>
+
         </div>
         <strong> Description: {description}</strong>
-        <img src={image} alt = {image} style={{ width: '200px', margin: '10px' }}/>
-        <div>{image}</div>
         <div>Sold By: {user}</div>
       </div>
     );

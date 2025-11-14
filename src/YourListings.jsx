@@ -22,6 +22,7 @@ function YourListings() {
         }
         setTypeArray(types);
       } catch (error) {
+        console.log(error)
         setTypeArray([]);
       }
     };
@@ -35,6 +36,7 @@ function YourListings() {
         }
         setTagArray(tags);
       } catch (error) {
+        console.log(error)
         setTagArray([]);
       }
 
@@ -44,6 +46,7 @@ function YourListings() {
         let profileData = await loadProfileInfo("");
         setUser(profileData)
       } catch (error) {
+        console.log(error)
         setUser([])
       }
     };
@@ -53,7 +56,9 @@ function YourListings() {
       try {
         let itemData = await loadUserItems();
         setItem(itemData)
+        
       } catch (error) {
+        console.log(error)
         setItem([]);
       }
     };
@@ -73,8 +78,7 @@ function YourListings() {
 
         {items.map((item) => (
             <div>
-
-              <OwnedItem item={item[0]} type={item[1]["type"]} price={item[1]["price"]} tags={item[1]["tag"]} image={item[1]["image"]} description={item[1]["description"]} user={userData[0]} allTypes={typeArray} allTags={tagArray}/>
+              <OwnedItem item={item[0]} type={item[1]["type"]} price={item[1]["price"]} tags={item[1]["tags"]} image={item[1]["image"]} description={item[1]["description"]} user={userData[0]} allTypes={typeArray} allTags={tagArray}/>
              
             </div>
         ))}

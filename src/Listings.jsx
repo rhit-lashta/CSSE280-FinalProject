@@ -1,6 +1,5 @@
 import './Login.css'
 import React, { useEffect, useState,} from "react";
-import {Link } from 'react-router-dom';
 import { loadItems, loadTypes, loadTags } from "./scriptMain";
 import Item from './Item.jsx';
 
@@ -28,7 +27,7 @@ function Listings() {
         setTypeArray(types);
         //setError(null);
       } catch (error) {
-        //setError(err.message);
+        console.log(error)
         setTypeArray([]);
       }
     };
@@ -42,7 +41,8 @@ function Listings() {
           tags.push(tagsData[i][0]);
         }
         setTagArray(tags);
-      } catch (err) {
+      } catch (error) {
+        console.log(error)
         setTagArray([]);
       }
 
@@ -53,6 +53,7 @@ function Listings() {
         let itemData = await loadItems("", "", 0, [], 0);
         setItemArray(itemData)
       } catch (error) {
+        console.log(error)
         setItemArray([]);
       }
     };
@@ -87,18 +88,36 @@ function Listings() {
     let {value} = e.target;
     setOrderData(value)
   };
-
+  
   let handleTags = (e) => {
-    let {value} = e.target;
-    setTagData([value])
+    let { value} = e.target;
+    if (value == "") {
+      return;
+    }
+    for (let i = 0; i < tags.length; i++) {
+      if (tags[i] == value) {
+        return;
+      }
+    }
+    setTagData([...tags, value]);
 
-    if (tags.length > 0) {
+    if (tags.length + 1 > 0) {
       setTagRequirementData(1)
     }
-    else {
-      setTagRequirementData(0)
+  };
+
+  let deleteTag = (e) => {
+    let { value} = e.target;
+    let newArray = [];
+    for (let i = 0; i < tags.length; i++) {
+      if (tags[i] != value) {
+        newArray.push(tags[i]);
+      }
     }
-    
+    setTagData(newArray);
+    if (newArray.length < tagRequirement) {
+      setTagRequirementData(tagRequirement - 1)
+    }
   };
 
   let handleTagRequirement = (e) => {
@@ -121,7 +140,6 @@ function Listings() {
   return (
     <> 
       <main>
-      <img src="images/Solution-4.png" alt = "/images/testImage.jpg"style={{ width: '200px', margin: '10px' }}/>
       <h1>Listings</h1>
 
       <form onSubmit={handleSubmit}>
@@ -147,6 +165,16 @@ function Listings() {
               </option>
             ))}
           </select>
+      </div>
+
+      <div className="selected-tags">
+        {tags.length > 0 ? (
+          tags.map((tag) => (
+            <button type="button" className="tag" onClick={deleteTag} value={tag}> {tag} </button>
+            ))
+              ) : (
+            <p className="no-tags">No tags selected</p>
+        )}
       </div>
 
       {tags.length > 0 && (
@@ -190,10 +218,8 @@ function Listings() {
       </form>
 
       {itemArray.map((item) => (
-            <div>
-
-              <Item item={item[0]} type={item[1]["type"]} price={item[1]["price"]} tags={item[1]["tag"]} image={item[1]["image"]} description={item[1]["description"]} user={item[2]}/>
-             
+            <div class="itemBox">
+              <Item item={item[0]} type={item[1]["type"]} price={item[1]["price"]} tags={item[1]["tags"]} image={item[1]["image"]} description={item[1]["description"]} user={item[2]}/>
             </div>
         ))}
 

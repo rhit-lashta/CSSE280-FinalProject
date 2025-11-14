@@ -274,33 +274,12 @@ export async function loadUserItems() {
 
 export async function createNewItem(itemName, price, type, photo, tags, description) {
 
-    /*
-    let data = {
-        "name": itemName,
-        "price": price,
-        "type": type, 
-        "tags": tags,
-        "description": description,
-    }
-    //data.append("image", photo, photo.name);
-    let options = {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    };
-    addAuthHeader(options)
-    */
-
     let formData = new FormData();
-
     formData.append("name", itemName);
     formData.append("price", price);
     formData.append("type", type);
     formData.append("tags", tags);
     formData.append("description", description);
-
     formData.append("image", photo, photo.name);
 
     let options = {
@@ -309,7 +288,6 @@ export async function createNewItem(itemName, price, type, photo, tags, descript
     };
     addAuthHeader(options)
     
-
     try {
         let response = await fetch("/item", options)
         if (!response.ok) {
@@ -352,28 +330,28 @@ export async function loadUserInfo() {
 
         return userArray;
     }
-    catch (ex) {
+    catch (e) {
         return null;
     }
 
 } 
 export async function updateItem(oldName, itemName, price, type, photo, tags, description) {
 
-    let data = {
-        "oldName": oldName,
-        "name": itemName,
-        "price": price,
-        "type": type, 
-        "photo": photo,
-        "tags": tags,
-        "description": description,
+
+    let formData = new FormData();
+    formData.append("oldName", oldName);
+    formData.append("name", itemName);
+    formData.append("price", price);
+    formData.append("type", type);
+    formData.append("tags", tags);
+    formData.append("description", description);
+    if (photo != null) {
+        formData.append("image", photo, photo.name);
     }
+
     let options = {
         method: "PATCH",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: formData, 
     };
     addAuthHeader(options)
 
@@ -385,7 +363,7 @@ export async function updateItem(oldName, itemName, price, type, photo, tags, de
             }
             throw new Error(`Response status: ${response.status}`);
         }
-        let success = await response.json();   
+        return;
     }
     catch (ex) {
         console.error(ex);
@@ -393,11 +371,10 @@ export async function updateItem(oldName, itemName, price, type, photo, tags, de
 
 }
 
-export async function removeItem(itemName, sold, price) {
+export async function removeItem(itemName, price) {
 
     let data = {
-        "name": itemName,
-        "sold": sold,
+        "itemName": itemName,
         "price": price,
     }
     let options = {
@@ -417,7 +394,8 @@ export async function removeItem(itemName, sold, price) {
             }
             throw new Error(`Response status: ${response.status}`);
         }
-        let success = await response.json();
+        return await response.json();
+
 
         
     }

@@ -21,19 +21,32 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
   let [newType, setNewType] = useState(type);
   let [newPrice, setNewPrice] = useState(price);
   let [newTags, setNewTags] = useState(tags);
-  let [newImage, setNewImage] = useState(image);
+  let [newImage, setNewImage] = useState(null);
   let [newDescription, setNewDescription] = useState(description);
 
-  function handleSubmit(event) {
+  let [sold, setSold] = useState(null);
+  let [sellValue, setValue] = useState(-1);
+  let [sellCustomValue, setCustomValue] = useState(0);
+
+  let [deleted, setDelete] = useState(false);
+
+  useEffect(() => {
+    setLink("/listings/itemPage/" + user + "/" + item);
+  })
+
+  async function handleSubmit(event) {
     event.preventDefault(); 
-    updateItem(currentItem, newItem, newPrice, newType, newImage, newTags, newDescription)
+    await updateItem(currentItem, newItem, newPrice, newType, newImage, newTags, newDescription)
     setCurrentItem(newItem)
     setCurrentType(newType)
     setCurrentPrice(newPrice)
     setCurrentTags(newTags)
-    setCurrentImage(newImage)
+    if (newImage != null) {
+      setCurrentImage("/images/" + newImage.name)
+    }
     setCurrentDescription(newDescription)
     setLink("/listings/itemPage/" + user + "/" + newItem)
+    setNewImage(null)
     setEdit(false);
   }
 
@@ -51,7 +64,7 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
     setNewType(currentType)
     setNewPrice(currentPrice)
     setNewTags(currentTags)
-    setNewImage(currentImage)
+    setNewImage(null)
     setNewDescription(currentDescription)
   }
 
@@ -70,43 +83,85 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
     setNewType(value)
   };
 
-  let handleTagsChange = (e) => {
-    let {value} = e.target;
-    setNewTags([value])
-    
+  let handleTagChange = (e) => {
+    let { value} = e.target;
+    if (value == "") {
+      return;
+    }
+    for (let i = 0; i < newTags.length; i++) {
+      if (newTags[i] == value) {
+        return;
+      }
+    }
+    setNewTags([...newTags, value]);
+  };
+
+  let deleteTag = (e) => {
+    let { value} = e.target;
+    let newArray = [];
+    for (let i = 0; i < newTags.length; i++) {
+      if (newTags[i] != value) {
+        newArray.push(newTags[i]);
+      }
+    }
+    setNewTags(newArray);
   };
 
   let handleImageChange = (e) => {
-    let {value} = e.target;
-    setNewImage(value)
+    setNewImage(e.target.files[0])
   };
+
 
   let handleDescriptionChange = (e) => {
     let {value} = e.target;
-    setNewDescription(value)
+    setNewDescription(value);
   };
 
-  function handleRemove(event) {
+  async function handleRemove(e) {
+    e.preventDefault(); 
     
+    await removeItem(currentItem, sellValue);
+    setDelete(true);
+    
+  }
+
+  let handleOptionChange = (e) => {
+    setSold(e.target.value);
+    if (sold == "notSold") {
+      setCustomValue(0);
+      setValue(-1);
+    }
+  }
+
+  let handleValueChange = (e) => {
+    setValue(e.target.value);
+  }
+
+  let handleCustomValueChange = (e) => {
+    setCustomValue(e.target.value);
+    setValue(e.target.value);
   }
     
     return (
-      <div id="itemBox">
+      <div>
+        {!deleted && (<div>
+      <div class = "profileBox">
+        
         {!inEditMode && !inRemoveMode && (
           <div>
-            <h1><Link to={link}>{currentItem}</Link></h1>
+            <div><img src={currentImage} alt = {currentImage} class = "itemImage" style={{ width: '500px', margin: '10px', float: "right"}}/></div>
+            <h2><Link to={link}>{currentItem}</Link></h2>
             <div>Listed Price: {currentPrice}</div>
             <div>Types: {currentType}</div>
             <div>
             Tags: 
-            {tags && tags.map((tag, index) => (
-            //    {tags[index]}
-            <p></p>
+            <p>
+            {(currentTags).map((tag) => (
+                <span class="displayTag">{tag}</span>
             ))}
-            Tags not Working
+            </p>
             </div>
             <strong> Description: {currentDescription}</strong>
-            <img src={currentImage} alt = {currentImage} style={{ width: '200px', margin: '10px' }}/>
             <div>Sold By: {user}</div>
             <button onClick={enterEditMode}>Edit</button>
             <button onClick={toggleRemoveMode}>Remove</button>
@@ -141,7 +196,7 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
 
               <div>
                 <label for="tagSelector"> Tags: </label>
-                <select id="tagSelector" name="tag" className="tagSelector" value={newTags} onChange={handleTagsChange}>
+                <select id="tagSelector" name="tag" className="tagSelector" value={allTags} onChange={handleTagChange}>
                   <option value="">--Select a Tag--</option>
                   {allTags.map((tagOption) => (
                     <option key={tagOption} value={tagOption}>
@@ -150,10 +205,20 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
                   ))}
                 </select>
               </div>
+
+              <div className="selected-tags">
+              {newTags.length > 0 ? (
+                newTags.map((tag) => (
+                  <button type="button" className="tag" onClick={deleteTag} value={tag}> {tag} </button>
+                ))
+              ) : (
+                <p className="no-tags">No tags selected</p>
+              )}
+              </div>
               
               <div>
                 <label htmlFor="image"> Image: </label>
-                <input name="image" id="image" type="file" accept="image/png, image/jpeg, image/jpg" class="uploadFile" required></input>
+                <input name="image" id="image" type="file" accept="image/png, image/jpeg, image/jpg" class="uploadFile" onChange={handleImageChange}></input>
               </div>
 
               <div>
@@ -177,14 +242,36 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
           <div>
             <form onSubmit={handleRemove}>
               <h2>Why Remove?</h2>
+              <input type="radio" id="sold" name="sellState" value="sold" checked={sold === "sold"} onChange={handleOptionChange} required></input>
+              <label for="sold">Sold</label><br></br>
+
+              <input type="radio" id="notSold" name="sellState" value="notSold" checked={sold === "notSold"} onChange={handleOptionChange}></input>
+              <label for="notSold">Not Sold</label><br></br>
+
+              {sold == "sold" && (
+                <div>
+                  <input type="radio" id="listed" name="sellValue" value={currentPrice} checked={sellValue == currentPrice} onChange={handleValueChange} required></input>
+                <label for="listed">Listed Price</label><br></br>
+
+                <input type="radio" id="custom" name="sellValue" value={sellCustomValue} checked={sellValue == sellCustomValue} onChange= {handleCustomValueChange}></input>
+                <label for="custom">Custom Price</label><br></br>
+                {sellValue == sellCustomValue && (
+                    <input type="number" id="customValue" name="price" value={sellCustomValue} onChange={handleCustomValueChange} required></input>  
+                )}
+                </div>
+              )}
+
+              <button type="submit">Remove Item</button>
               <button onClick={toggleRemoveMode}>Cancel</button>
             </form>
-
           </div>
           )
         }
         
       </div>
+      </div>)}
+      </div>
+      
     );
 };
   

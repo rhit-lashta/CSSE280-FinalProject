@@ -1,5 +1,6 @@
 import pickledb
 import os
+from datetime import date
 
 global_db = None
 
@@ -95,16 +96,16 @@ def add_placeholder_values():
     db = get_db()
 
     types = db.get(data_key)[type_key]
-    types["loft"] = {"loft1":{sold_key:100.00, data_key:"10/29/2025"},
-                      "loft2":{sold_key:150.00, data_key:"10/30/2025"},
-                      "loft3":{sold_key:200.00, data_key:"8/30/2025"},
-                      "loft4":{sold_key:300.00, data_key:"12/25/2024"},
-                      "loft5":{sold_key:100.00, data_key:"11/6/2025"},
-                      "loft6":{sold_key:150.00, data_key:"4/10/2022"},
-                      "loft7":{sold_key:75.00, data_key:"2/3/2017"}}
+    types["loft"] = {"loft1":{sold_key:100.00, date_key:"10/29/2025"},
+                      "loft2":{sold_key:150.00, date_key:"10/30/2025"},
+                      "loft3":{sold_key:200.00, date_key:"8/30/2025"},
+                      "loft4":{sold_key:300.00, date_key:"12/25/2024"},
+                      "loft5":{sold_key:100.00, date_key:"11/6/2025"},
+                      "loft6":{sold_key:150.00, date_key:"4/10/2022"},
+                      "loft7":{sold_key:75.00, date_key:"2/3/2017"}}
                       
-    types["light"] = {"light1":{sold_key:30.00, data_key:"10/30/2025"},
-                       "light2":{sold_key:40.00, data_key:"5/30/2025"}}
+    types["light"] = {"light1":{sold_key:30.00, date_key:"10/30/2025"},
+                       "light2":{sold_key:40.00, date_key:"5/30/2025"}}
 
     tags = db.get(data_key)[tag_key]
     tags["wooden"] = "1"
@@ -227,6 +228,7 @@ def get_item(user, itemName):
     if ((user in users) and (itemName in users[user][item_key])):
         userInfo = users[user][info_key]
         itemTraits = users[user][item_key][itemName]
+        itemTraits = itemTraits
         item = [userInfo, itemTraits]
         return item
     else:
@@ -269,7 +271,7 @@ def get_profile(username):
     
     return [userData]
 
-def get_profile(currentUser, username):
+def get_specific_profile(currentUser, username):
     db = get_db()
     users = db.get(users_key)
     userData = users[username][info_key]
@@ -301,70 +303,62 @@ def update_item(username, oldName, itemName, photo, type, price, tags, descripti
     users = db.get(users_key)
     userItems = users[username][item_key]
 
+    newPhoto = photo
+    filepath = ""
+    
     if (oldName in userItems):
+        if (photo == None):
+            newPhoto = userItems[oldName][image_key]
+        else:
+            filepath = "dist" + userItems[itemName][image_key]
+        
+
         del userItems[oldName]
 
     newItem = {
 		        	itemType_key:type,
 			        price_key:price,
 			        tag_key:tags,
-			        image_key:photo,
+			        image_key:newPhoto,
 			        description_key:description
 		        } 
     
     userItems[itemName] = newItem
     db.save()
   
-    return True
-
+    return filepath
     
-
-
-
-'''
-def get_shopping_list():
+def remove_item(username, itemName, price):
     db = get_db()
-    list = get_user_data(db, username)
-    all_items = db.all()
-    shopping_list_items = {}
-    for x in all_items:
-        shopping_list_items[x] = list.get(x)
+    users = db.get(users_key)
+    userItems = users[username][item_key]
+    
+    if (itemName in userItems):
+        itemType = userItems[itemName][type_key]
+        fileName = userItems[itemName][image_key]
+        del userItems[itemName]
 
-    return shopping_list_items
+        if (price > 0):
+            
+            today = date.today()
+            currentDate =  str(today.month) + "/" + str(today.day) + "/" + str(today.year)
 
-def add_item_to_list(item):
-    db = get_db()
-    list = get_user_data(db, username)
-    if db.get(item) is None:
-        # prevent duplicates
-        list.set(item, {"got": False})
-    db.save()
-    return get_shopping_list()
+            dataMain = db.get(data_key)
+            typeSection = dataMain[type_key][itemType]
 
-def add_item_with_image(item, filepath):
-    db = get_db()
-    if db.get(item) is None:
-        # prevent duplicates
-        data = {"got": False, "image_path": filepath}
-        print(data)
-        db.set(item, data)
-    db.save()
-    return get_shopping_list()
+            newSale = {sold_key:price, date_key:currentDate}
 
-def move_item_between_lists(item):
-    db = get_db()
-    db_item = db.get(item)
-    if db_item is None:
-        return get_shopping_list()
-    db_item["got"] = not db_item["got"]
-    db.set(item, db_item)
-    db.save()
-    return get_shopping_list()
+            ## Prevents Item Override
+            count = 0
+            saveItemName = itemName
+            while (saveItemName in typeSection):
+                saveItemName = itemName + str(count)
+                count += 1
 
+            typeSection[saveItemName] = newSale
 
-def remove_item(item):
-    db = get_db()
-    db.remove(item)
-    db.save()
-    return get_shopping_list()
-    '''
+          
+        db.save()
+        return "dist" + fileName
+    else:
+        return False
