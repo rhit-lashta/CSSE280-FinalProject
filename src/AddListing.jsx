@@ -1,11 +1,13 @@
 import './Login.css'
 import React, { useEffect, useState } from "react";
-import { loadTypes, loadTags, createNewItem } from "./scriptMain"; 
+import { loadTypes, loadTags, createNewItem, checkNoSpecial } from "./scriptMain"; 
 
 function AddListing() {
   
   let [typeArray, setTypeArray] = useState([]);
   let [tagArray, setTagArray] = useState([]);
+
+  let [error, setError] = useState("");
 
   useEffect(() => {
 
@@ -96,7 +98,13 @@ function AddListing() {
 
   function handleSubmit(event) {
     event.preventDefault(); 
-    createNewItem(formData.itemName, formData.price, formData.type, formImage, tags, formData.description)
+    if (checkNoSpecial(formData.itemName)) {
+      setError("")
+      createNewItem(formData.itemName, formData.price, formData.type, formImage, tags, formData.description)
+    }
+    else {
+      setError("Item Name can only have letters a-z and A-Z")
+    }
   }
 
   return (
@@ -108,6 +116,7 @@ function AddListing() {
           <div>
             <label for="itemName"> Item Name: </label>
             <input type="text" id="itemName" name="itemName" className="choice" value={formData.itemName} onChange={handleFormChange} required></input>
+            <div class="error">{error}</div>
           </div>
 
           <div>

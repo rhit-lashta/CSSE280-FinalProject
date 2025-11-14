@@ -19,7 +19,7 @@ import PriceHistory from './PriceHistory.jsx';
 function App() {
     return (
       <>
-        <nav id="mainBanner">
+        <nav id="theMainBanner">
           <Link to="/">Login</Link>
           <Link to="/listings">Listings</Link>
           <Link to="/profile">Profile</Link>

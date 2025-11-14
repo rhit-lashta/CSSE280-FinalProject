@@ -1,5 +1,4 @@
 import './Login.css'
-import React, { useEffect} from "react";
 import {Link } from 'react-router-dom';
 
 function Item({item, type, price, tags, image, description, user}) { 
@@ -7,10 +6,6 @@ function Item({item, type, price, tags, image, description, user}) {
   let link = "/listings/itemPage/" + user + "/" + item;
 
   let userLink = "/profile/" + user;
-
-  useEffect(() => {
-    console.log(tags)
-  })
     
     return (
       <div>

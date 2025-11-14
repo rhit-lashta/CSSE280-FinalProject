@@ -26,8 +26,9 @@ jwt = JWTManager(app)
 
 @app.post("/create_account")
 def create_account():
-    username = request.form["username"]
-    password = request.form["password"]
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
     if not dataservice.add_user(username, password):
         return flask.redirect("/index.html")
     return flask.redirect("/index.html")

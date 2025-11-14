@@ -12,7 +12,7 @@ body {
     background-color: white;
 }
 
-#mainBanner {
+#theMainBanner {
     background-color: var(--roseRed);
     position: fixed;
     top: 0;
@@ -24,13 +24,13 @@ body {
     align-items: center;
 }
 
-#mainBanner a {
+#theMainBanner a {
     color: white;
     text-decoration: none;
     padding: 20px
 }
 
-#mainBanner a:hover {
+#theMainBanner a:hover {
     background-color: #600000;
 }
 
@@ -219,10 +219,10 @@ li:hover {
         width: 40%;
         font-size: 12px;
     }
-    #mainBanner {
+    #theMainBanner {
         font-size: 14px;
     }
-    #mainBanner a {
+    #theMainBanner a {
         color: white;
         text-decoration: none;
         padding: 10px;
@@ -267,5 +267,10 @@ li:hover {
     margin-left: auto; 
     max-width: 150px; 
     float: "right";
+}
+
+.error {
+    color: red;
+    font-size: 20px;
 }
 
