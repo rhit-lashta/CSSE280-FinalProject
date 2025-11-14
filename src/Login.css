@@ -134,12 +134,66 @@ li:hover {
     justify-content: center;
 }
 
+.centerOptions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 30px;
+    padding-bottom: 20px;
+}
+
+.choiceWide {
+    width: 500px;
+    padding: 10px;
+    font-size: 22px;
+    margin: 10px;
+}
+
+.choice {
+    width: 300px;
+    padding: 10px;
+    font-size: 18px;
+    margin: 10px;
+}
+
+.choiceSmall {
+    width: 100px;
+    padding: 10px;
+    font-size: 18px;
+    margin: 10px;
+}
+
+
+@media (max-width: 767px) {
+    .centerOptions {
+        font-size: 18px;
+        padding-bottom: 20px;
+    }
+    .choiceWide {
+        width: 60%;
+        font-size: 14px;
+    }
+    .choice {
+        width: 60%;
+        font-size: 12px;
+    }
+    .choiceSmall {
+        width: 40%;
+        font-size: 12px;
+    }
+
+}
+
+
+
 .buttonTag {
     border: 2px solid black;
     background-color: var(--tagColor);
     padding: 10px;
     margin: 3px;
     justify-content: center;
+    font-size: 16px;
 }
 
 .buttonTag:hover {

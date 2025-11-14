@@ -180,7 +180,7 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
             
               <div>
                 <label for="price"> Price: </label>
-                <input type="number" id="price" name="price" value={newPrice} onChange={handlePriceChange} required></input>  
+                <input type="number" id="price" name="price" value={newPrice} onChange={handlePriceChange} min="0" required></input>  
               </div>
 
               <div>
@@ -206,15 +206,15 @@ function OwnedItem({item, type, price, tags, image, description, user, allTypes,
                 </select>
               </div>
 
-              <div className="selected-tags">
+              <p className="selected-tags">
               {newTags.length > 0 ? (
                 newTags.map((tag) => (
-                  <button type="button" className="tag" onClick={deleteTag} value={tag}> {tag} </button>
+                  <button type="button" className="buttonTag" onClick={deleteTag} value={tag}> {tag} </button>
                 ))
               ) : (
                 <p className="no-tags">No tags selected</p>
               )}
-              </div>
+              </p>
               
               <div>
                 <label htmlFor="image"> Image: </label>

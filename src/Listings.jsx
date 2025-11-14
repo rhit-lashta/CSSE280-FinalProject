@@ -5,8 +5,6 @@ import Item from './Item.jsx';
 
 function Listings() {
 
-  //<> is a React Fragment that doesn't include extra DOM elements
-
   let [typeArray, setTypeArray] = useState([]);
   let [tagArray, setTagArray] = useState([]);
   let [itemArray, setItemArray] = useState([]);
@@ -25,7 +23,6 @@ function Listings() {
           types.push(typesData[i][0]);
         }
         setTypeArray(types);
-        //setError(null);
       } catch (error) {
         console.log(error)
         setTypeArray([]);
@@ -142,11 +139,11 @@ function Listings() {
       <main>
       <h1>Listings</h1>
 
+      <div className="centerOptions">
       <form onSubmit={handleSubmit}>
       <div>
-            <label for="typeSelector"> Type: </label>
-            <select id="typeSelector" name="type" className="typeSelector" value={currentType} onChange={handleType}>
-              <option value=""> None </option>
+            <select id="typeSelector" name="type" className="choiceWide" value={currentType} onChange={handleType}>
+              <option value=""> Search By Item Type </option>
                 {typeArray.map((typeOption) => (
                   <option key={typeOption} value={typeOption}>
                     {typeOption}
@@ -156,9 +153,8 @@ function Listings() {
       </div>
 
       <div>
-        <label for="tagSelector"> Tags: </label>
-        <select id="tagSelector" name="tag" className="tagSelector" value={tags} onChange={handleTags}>
-          <option value="">--Select a Tag--</option>
+        <select id="tagSelector" name="tag" className="choice" value={tags} onChange={handleTags}>
+          <option value=""> Add Search Tags </option>
             {tagArray.map((tagOption) => (
               <option key={tagOption} value={tagOption}>
                 {tagOption}
@@ -168,19 +164,25 @@ function Listings() {
       </div>
 
       <div className="selected-tags">
+        <p>
         {tags.length > 0 ? (
-          tags.map((tag) => (
-            <button type="button" className="tag" onClick={deleteTag} value={tag}> {tag} </button>
-            ))
+          
+          <p>
+          Search Tags: 
+          {tags.map((tag) => (
+            <button type="button" className="buttonTag" onClick={deleteTag} value={tag}> {tag} </button>
+            ))}
+          </p>
               ) : (
             <p className="no-tags">No tags selected</p>
         )}
+        </p>
       </div>
 
       {tags.length > 0 && (
           <div>
-            <label for="requirementSelector"> Required Tag Elements: </label>
-            <input type="number" id="requirementSelector" name="requirements" className="requirements" value={tagRequirement} min="0" max={tags.length} onChange={handleTagRequirement}></input>
+            <label for="requirementSelector"> Required Tags: </label>
+            <input type="number" id="requirementSelector" name="requirements" className="choiceSmall" value={tagRequirement} min="0" max={tags.length} onChange={handleTagRequirement}></input>
 
           </div>
           )
@@ -188,7 +190,7 @@ function Listings() {
 
       <div>
         <label for="orderValueSelector"> Sort By: </label>
-        <select id="orderValueSelector" name="orderValueSelector" className="orderValueSelector" value={orderValue} onChange={handleOrderValue}>
+        <select id="orderValueSelector" name="orderValueSelector" className="choice" value={orderValue} onChange={handleOrderValue}>
           <option value="">--Select the Order--</option>
             {orderValuesArray.map((orderValueOption) => (
               <option key={orderValueOption} value={orderValueOption}>
@@ -201,7 +203,7 @@ function Listings() {
       {orderValue != "" && (
           <div>
             <label for="orderSelector"> Order: </label>
-            <select id="orderSelector" name="orderSelector" className="orderSelector" value={order} onChange={handleOrder}>
+            <select id="orderSelector" name="orderSelector" className="choice" value={order} onChange={handleOrder}>
               <option value={0} >--Select a Order--</option>
                 {orderArray.map((option) => (
                   <option key={option[1]} value={option[1]}>
@@ -213,9 +215,10 @@ function Listings() {
           )
         }
 
-        <button type="submit">Search With These Options</button>
+        <button type="submit" class="choice">Search With These Options</button>
 
       </form>
+      </div>
 
       {itemArray.map((item) => (
             <div class="itemBox">

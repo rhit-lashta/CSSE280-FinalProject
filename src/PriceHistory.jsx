@@ -1,6 +1,6 @@
 import './Login.css'
 import React, { useEffect, useState,} from "react";
-import { loadTypes, loadItems } from "./scriptMain";
+import { loadTypes } from "./scriptMain";
 import { getPriceWidget } from "./marketCalulations"
 import { BarChart } from '@mui/x-charts/BarChart';
 
@@ -26,13 +26,10 @@ function PriceHistory() {
           types.push(typesData[i][0]);
         }
         setTypeArray(types);
-        //setError(null);
       } catch (error) {
-        //setError(err.message);
+        console.log(error)
         setTypeArray([]);
-      } finally {
-        //setLoading(false);
-      }
+      } 
     };
 
     fetchTypes();
@@ -71,11 +68,10 @@ function PriceHistory() {
       <main>
 
         <h1>Price History</h1>
-
+        <div className="centerOptions">
         <div>
-            <label for="typeSelector"> Type: </label>
-            <select id="typeSelector" name="type" className="typeSelector" value={currentType} onChange={handleTypeChange} required>
-              <option value="">--Select a Type--</option>
+            <select id="typeSelector" name="type" className="choiceWide" value={currentType} onChange={handleTypeChange} required>
+              <option value="">Select a Type</option>
                 {typeArray.map((typeOption) => (
                   <option key={typeOption} value={typeOption}>
                     {typeOption}
@@ -119,11 +115,12 @@ function PriceHistory() {
             ]}
             height={300}
             />
-            <div>Current value: {currentAvgPrice}</div>
+            <div>Current value: ${currentAvgPrice}</div>
           </div>
 
           )
         }
+      </div>
       </main>
     </>
   )

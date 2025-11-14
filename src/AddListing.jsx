@@ -107,21 +107,21 @@ function AddListing() {
     <> 
       <main>
         <h1>Add Listing</h1>
-        
+        <div className="centerOptions">
         <form onSubmit={handleSubmit}>
           <div>
             <label for="itemName"> Item Name: </label>
-            <input type="text" id="itemName" name="itemName" value={formData.itemName} onChange={handleFormChange} required></input>
+            <input type="text" id="itemName" name="itemName" className="choice" value={formData.itemName} onChange={handleFormChange} required></input>
           </div>
 
           <div>
             <label for="price"> Price: </label>
-            <input type="number" id="price" name="price" value={formData.price} onChange={handleFormChange} required></input>  
+            <input type="number" id="price" name="price" className="choiceSmall" value={formData.price} onChange={handleFormChange} min="0" required></input>  
           </div>
 
           <div>
             <label for="typeSelector"> Type: </label>
-            <select id="typeSelector" name="type" className="typeSelector" value={formData.type} onChange={handleFormChange} required>
+            <select id="typeSelector" name="type" className="choice" value={formData.type} onChange={handleFormChange} required>
               <option value="">--Select a Type--</option>
               {typeArray.map((typeOption) => (
                 <option key={typeOption} value={typeOption}>
@@ -132,9 +132,9 @@ function AddListing() {
           </div>
 
           <div>
-            <label for="tagSelector"> Tags: </label>
-            <select id="tagSelector" name="tag" className="tagSelector" value={tags} onChange={handleTagChange}>
-              <option value="">--Select a Tag--</option>
+
+            <select id="tagSelector" name="tag" className="choice" value={tags} onChange={handleTagChange}>
+              <option value=""> Add Search Tags </option>
               {tagArray.map((tagOption) => (
                 <option key={tagOption} value={tagOption}>
                   {tagOption}
@@ -144,20 +144,22 @@ function AddListing() {
 
             <p className="selected-tags">
               {tags.length > 0 ? (
-                tags.map((tag) => (
-
+                <p>
+                  Search Tags:
+                {tags.map((tag) => (
                   <button type="button" className="buttonTag" onClick={deleteTag} value={tag}> {tag} </button>
-                ))
+                ))}
+                </p>
               ) : (
                 <p className="no-tags">No tags selected</p>
               )}
             </p>
           </div>
 
-          <div>
+          <p>
             <label htmlFor="image"> Image: </label>
-            <input name="image" id="image" type="file" accept="image/png, image/jpeg, image/jpg" class="uploadFile" onChange={handleImageChange} required></input>
-          </div>
+            <input name="image" id="image" type="file" className="choice" accept="image/png, image/jpeg, image/jpg" class="uploadFile" onChange={handleImageChange} required></input>
+          </p>
 
 
           <div>
@@ -167,8 +169,9 @@ function AddListing() {
             <textarea id="description" rows="10" cols="50" name="description" placeholder="Enter a Description" value={formData.description} onChange={handleFormChange}></textarea>  
           </div>          
 
-          <button type="submit">Add Listing</button>
+          <button type="submit" className="choice" >Add Listing</button>
         </form>
+        </div>
       </main>
     </>
   );
