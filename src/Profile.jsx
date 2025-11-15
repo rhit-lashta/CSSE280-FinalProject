@@ -88,9 +88,9 @@ function Profile() {
 
   return (
     <main> 
+    {/*CoPilot Query: Used multiple queries. I initially asked it to do something along the lines of having Profile only be editeable when you are the correct user. I ended up asking it a few more things since it did more than I expected and I needed the code clarified and had to bugfix it anyways to do what I wanted it to do.*/}
     {profileFound == true && (
       <div>
-      
         <h1>Profile</h1>
         <div class = "profileBox">
           <div class = "profileHeader">
