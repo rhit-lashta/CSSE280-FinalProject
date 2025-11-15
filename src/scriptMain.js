@@ -27,7 +27,7 @@ function addAuthHeader(options){
 }
 
 export async function login(username, password) {
-    try {
+    try { 
         
         let response = await fetch("/login", {
             method: "POST",
