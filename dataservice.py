@@ -97,7 +97,7 @@ def add_placeholder_values():
 
     types = db.get(data_key)[type_key]
     types["loft"] = {"loft1":{sold_key:100.00, date_key:"10/29/2025"},
-                      "loft2":{sold_key:150.00, date_key:"10/30/2025"},
+                      "loft2":{sold_key:150.00, date_key:"11/10/2025"},
                       "loft3":{sold_key:200.00, date_key:"8/30/2025"},
                       "loft4":{sold_key:300.00, date_key:"12/25/2024"},
                       "loft5":{sold_key:100.00, date_key:"11/6/2025"},
@@ -106,32 +106,47 @@ def add_placeholder_values():
                       
     types["light"] = {"light1":{sold_key:30.00, date_key:"10/30/2025"},
                        "light2":{sold_key:40.00, date_key:"5/30/2025"}}
+    
+    types["chair"] = {"chair1":{sold_key:30.00, date_key:"11/13/2025"}}
+    
+    types["desk"] = {"desk1":{sold_key:100.00, date_key:"11/11/2025"},
+                     "desk2":{sold_key:40.00, date_key:"5/30/2023"}}
+    
+    types["other"] = {}
 
     tags = db.get(data_key)[tag_key]
     tags["wooden"] = "1"
     tags["metal"] = "2"
+    tags["over 6 feet"] = "3"
+    tags["under 6 feet"] = "4"
+    tags["over 9 feet"] = "5"
+    tags["has instructions"] = "6"
+    tags["hand made"] = "7"
+    tags["soft"] = "8"
 
     users = db.get(users_key)
-    item1 = {itemType_key:"loft", price_key:70.00, tag_key:["wooden","metal"], image_key:"/images/testImage.jpg", description_key:"text"}
-    item2 = {itemType_key:"loft", price_key:30.00, tag_key:["wooden"], image_key:"/images/testImage.jpg", description_key:"text2"}
-    item3 = {itemType_key:"light", price_key:10.00, tag_key:["wooden"], image_key:"/images/testImage.jpg", description_key:"lightText"}
+    item1 = {itemType_key:"loft", price_key:70.00, tag_key:["wooden","metal","over 6 feet","has instructions"], image_key:"/images/Loft1.png", description_key:"A medium sized wood loft."}
+    item2 = {itemType_key:"loft", price_key:30.00, tag_key:["metal","over 9 feet","has instructions"], image_key:"/images/Loft2.jpg", description_key:"A Little loft for a little boy"}
+    item3 = {itemType_key:"light", price_key:10.00, tag_key:["under 6 feet"], image_key:"/images/Lamp.jpg", description_key:"It would be a very bright idea to buy this"}
+    item4 = {itemType_key:"chair", price_key:30.00, tag_key:["wooden","hand made"], image_key:"/images/Chair.jpg", description_key:"Deals like this come once in a lifetime"}
+    item5 = {itemType_key:"chair", price_key:45.00, tag_key:["metal", "soft"], image_key:"/images/SoftChair.jpg", description_key:"Soft Chair"}
     users["user1"] = {password_key:"password123",
                       info_key:{
-                        email_key:"blank@gmail.com", 
+                        email_key:"awsome@gmail.com", 
                         phone_key:"111-111-1111", 
-                        description_key:"How to get in contact with me", 
-                        profile_key: "images/test.jpg",
+                        description_key:"I live in percopo 4, you must answer my riddles 3 to buy from me", 
+                        profile_key: "images/testImage.jpg",
                       },
-                      item_key:{"Item1":item1,"Item2":item2, "Item3":item3}
+                      item_key:{"WoodLoft":item1,"Lamp":item3, "WoodChair":item4}
                     }
     users["user2"] = {password_key:"password1234",
                       info_key:{
                         email_key:"blank@gmail.com", 
-                        phone_key:"111-111-1111", 
-                        description_key:"How to get in contact with me", 
-                        profile_key: "images/test.jpg",
+                        phone_key:"111-111-1112", 
+                        description_key:"I live right down the road", 
+                        profile_key: "images/Dog.jpg",
                       },
-                      item_key:{"Item3":item3}
+                      item_key:{"MetalLoft":item2, "ComfyChair":item5}
                     }
     
 

@@ -27,9 +27,7 @@ function addAuthHeader(options){
 }
 
 export async function login(username, password) {
-    try {
-        //let username = document.getElementById("username_text").value;
-        //let password = document.getElementById("password_text").value;
+    try { 
         
         let response = await fetch("/login", {
             method: "POST",
@@ -68,8 +66,7 @@ export async function createAccount(username, password) {
                 password: password
             })
         })
-        let responseData = await response.json();
-        return true
+        return await response.json();
 
     }
     catch (ex) {
@@ -78,11 +75,16 @@ export async function createAccount(username, password) {
     }
 }
 
-export function checkNoSpecial(input) {
-    let test = /[A-Za-z]+$/
+export function checkNoSpecialOrSpaces(input) {
+    let test = /^[A-Za-z1-9]+$/
     return test.test(input);
-    return false;
 }
+
+export function checkNoSpecial(input) {
+    let test = /[A-Za-z1-9\s]+$/;
+    return test.test(input);
+}
+
 
 export async function displayTopLevel() {
     let options = {

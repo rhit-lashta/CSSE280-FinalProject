@@ -1,15 +1,8 @@
 import './Login.css'
-import React, { useEffect, useState} from "react";
-import { login, createAccount, checkNoSpecial} from "./scriptMain"; 
+import React, {useState} from "react";
+import { login, createAccount, checkNoSpecialOrSpaces} from "./scriptMain"; 
 
 function Login() {
-
-  //<> is a React Fragment that doesn't include extra DOM elements
-
-  // Use Effects once at the start
-  useEffect(() => {
-
-  }, []);
 
   let [inLogin, setLogin] = useState(true);
 
@@ -28,15 +21,18 @@ function Login() {
 
   async function handleCreateAccount(event) {
     event.preventDefault();
-    if (checkNoSpecial(username)) {
-      setError("")
+    if (checkNoSpecialOrSpaces(username)) {
+      setError("");
       let accountCreated = await createAccount(username, password)
       if (accountCreated) {
-          window.location.href = "index.html";
+        toggleLogin();
+      }
+      else {
+        setError(username + " Already Exists");
       }
     }
     else {
-      setError("Username can only have letters a-z and A-Z")
+      setError("Username can only have letters a-z and A-Z and no spaces");
     }
   }
 
